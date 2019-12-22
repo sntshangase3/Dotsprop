@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+android:background="@color/colorWhite"
+
+
+    >
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+
+        >
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/map_search"
+android:layout_weight="1"
+
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="1"
+            android:id="@+id/lblid"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:visibility="gone"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="Sibusiso Ntshangase"
+            android:id="@+id/lblname"
+             android:layout_marginTop="2dp"
+            android:layout_weight="20"
+
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="20Km"
+            android:id="@+id/lbldistance"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:layout_weight="5"
+
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="2019-07-01 14H00"
+            android:textAlignment="center"
+            android:id="@+id/lblcollectiondate"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:layout_weight="11"
+
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="Aproved"
+            android:textAlignment="center"
+            android:id="@+id/lblstatus"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:layout_weight="8"
+
+            />
+
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

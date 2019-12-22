@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/colorWhite"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+	<LinearLayout	
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+	>
+		<TextView
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:textColor="#FFA500"
+			android:gravity="center"
+			android:textStyle="bold"
+			android:textAlignment="center"
+			android:background="@drawable/status_expire_notice_home"
+			android:id="@+id/txtorderno"
+			/>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+		android:text="Create Collection Request!!"
+			android:typeface="sans"
+			android:textSize="20sp"
+			android:layout_margin="5dp"
+			android:gravity="center"
+			android:textColor="@color/colorPrimary"
+			/>
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_gravity="center"
+			android:gravity="center"
+			>
+			<Spinner
+				android:id="@+id/spinnercategory"
+				android:layout_width="wrap_content"
+				android:layout_height="1dp"
+				android:layout_gravity="center_horizontal"
+				/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:layout_gravity="center">
+
+			<EditText
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+android:hint="1 Poole Street,Brooklyn,Cape Town"
+				android:text="1 Poole Street,Brooklyn,Cape Town"
+				android:textColor="#5d5d5d"
+				android:background="@drawable/edittext_bground"
+			android:layout_margin="10dp"
+				android:layout_marginTop="1dp"
+				android:id="@+id/edtaddress" />
+
+
+		</LinearLayout>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="horizontal"
+			android:gravity="center"
+			android:layout_gravity="center">
+			<Spinner
+				android:id="@+id/spinnercarwash"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_marginTop="1dp"
+				android:textColor="@color/colorRed"
+				android:textAlignment="center"
+				android:layout_gravity="center"
+				android:gravity="center"
+				android:layout_margin="10dp"
+				android:background="@drawable/button_bground"
+
+				/>
+		</LinearLayout>
+		<EditText
+			android:visibility="gone"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:layout_margin="5dp"
+			android:textColor="#5d5d5d"
+		android:text="14 Christian Avenue, Epping 2, Cape Town, South Africa, 7460"
+			android:hint="14 Christian Avenue, Epping 2, Cape Town, South Africa, 7460"
+			android:textAlignment="center"
+			android:background="@drawable/edittext_bground"
+			android:padding="5dp"
+			android:id="@+id/edtaddresssametal" />
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			>
+			<TextView
+				android:id="@+id/edtdistance"
+				android:textSize="13sp"
+				android:padding="3dp"
+				android:textStyle="bold"
+				android:textAlignment="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/colorPrimary"
+
+				/>
+
+
+		</LinearLayout>
+
+
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			>
+			<ImageButton
+				android:layout_width="80dp"
+				android:layout_height="80dp"
+				android:src="@drawable/carwash"
+				android:padding="5dp"
+			android:scaleType="fitXY"
+				android:id="@+id/filtercategory"
+				android:background="@color/colorWhite"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+
+				android:text="Select booking Date and Time"
+				android:typeface="sans"
+				android:textSize="12sp"
+				android:layout_margin="5dp"
+				android:gravity="center"
+				android:textColor="@color/colorPrimary"
+
+				/>
+
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/layoutlist"
+			android:layout_width="match_parent"
+			android:layout_height="350dp"
+			android:background="@color/colorWhite"
+			>
+			<ListView
+
+				android:id="@+id/lstgross"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:divider="@color/colorWhite"
+				android:padding="1dp"
+				android:layout_weight="1"
+
+				>
+			</ListView>
+
+		</LinearLayout>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="2">
+
+		<Button
+			android:id="@+id/confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="30sp"
+            android:layout_margin="1dp"
+			android:layout_weight="1"
+			android:text="Confirm"
+			android:background="@drawable/button_bground"
+			android:textColor="@color/colorPrimary"
+
+			/>
+		<Button
+			android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="30sp"
+            android:layout_margin="1dp"
+			android:layout_weight="1"
+			android:text="Cancel"
+			android:background="@drawable/button_bground"
+            android:textColor="@color/colorRed"
+
+			/>
+	</LinearLayout>
+
+
+
+
+	</LinearLayout>
+
+	</ScrollView>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+
+
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="Sibusiso Ntshangase"
+            android:textAlignment="center"
+            android:id="@+id/lblname"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:layout_weight="8"
+            android:layout_margin="2dp"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="Sibusiso"
+            android:textAlignment="center"
+            android:id="@+id/lblusername"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:layout_weight="5"
+            android:layout_margin="2dp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="Engineering"
+            android:textAlignment="center"
+            android:id="@+id/lbldepartment"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:layout_weight="8"
+            android:layout_margin="2dp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

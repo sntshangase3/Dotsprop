@@ -1,4 +1,4 @@
-package com.example.sibusiso_javapracticaltest;
+package com.sametal.za;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -12,50 +12,51 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 import java.util.ArrayList;
 
 
-public class PokemonAdapter extends  ArrayAdapter<String> {
+public class LocationAdapter extends  ArrayAdapter<String> {
 
     private final Activity context;
 
     MainActivity activity = MainActivity.instance;
     private final ArrayList<Integer> item_id;
     private final ArrayList<Bitmap> item_image;
-    private final ArrayList<String> item_name;
-    private final ArrayList<String> item_type;
+    private final ArrayList<String> item_address;
+    private final ArrayList<String> item_coordinates;
 
 
-    public PokemonAdapter(Activity context,ArrayList<Integer> item_id, ArrayList<Bitmap> image, ArrayList<String> name, ArrayList<String> type) {
-        super(context, R.layout.pokemon_row, name);
+    public LocationAdapter(Activity context, ArrayList<Integer> item_id, ArrayList<Bitmap> image, ArrayList<String> address, ArrayList<String> coordinate) {
+        super(context, R.layout.location_row, address);
         // TODO Auto-generated constructor stub
 
         this.context = context;
         this.item_id = item_id;
         this.item_image = image;
-        this.item_name = name;
-        this.item_type = type;
+        this.item_address = address;
+        this.item_coordinates = coordinate;
 
 
     }
 
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rootView = inflater.inflate(R.layout.pokemon_row, null, true);
+        View rootView = inflater.inflate(R.layout.location_row, null, true);
 
         ImageView image;
-        TextView id,name,type;
+        TextView id,address,coordinates;
         id = (TextView) rootView.findViewById(R.id.tv_id);
-        image = (ImageView) rootView.findViewById(R.id.iv_pokemon);
-        name = (TextView) rootView.findViewById(R.id.tv_name);
-        type = (TextView) rootView.findViewById(R.id.tv_type);
+        image = (ImageView) rootView.findViewById(R.id.iv_location);
+        address = (TextView) rootView.findViewById(R.id.tv_address);
+        coordinates = (TextView) rootView.findViewById(R.id.tv_coordinates);
 
 
         try {
 
             id.setText(item_id.get(position).toString());
-            name.setText(item_name.get(position).toString());
-            type.setText(item_type.get(position).toString());
+            address.setText(item_address.get(position).toString());
+            coordinates.setText(item_coordinates.get(position).toString());
             image.setImageBitmap(item_image.get(position));
 
 
