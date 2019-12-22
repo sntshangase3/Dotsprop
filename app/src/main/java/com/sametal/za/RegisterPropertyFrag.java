@@ -55,7 +55,6 @@ public class RegisterPropertyFrag extends Fragment {
     //---------con--------
     Connection con;
     String un, pass, db, ip;
-
     Button btncreate,btnsave;
     MainActivity activity = MainActivity.instance;
     byte[] byteArray;
