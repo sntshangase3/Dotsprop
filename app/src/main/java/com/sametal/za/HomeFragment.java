@@ -23,14 +23,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -40,16 +44,18 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class HomeFragment extends Fragment {
     View rootView;
 
-    ImageView b1, b2;
+
     Button btn_premium;
     MainActivity activity = MainActivity.instance;
     Connection con;
     String un, pass, db, ip;
 
-    TextView  txtbookingsno;
-    ImageView edtlogoImage, edtprofileImage;
+    TextView txtnotifications,txtaddress,txttotalannualcost,txtwelcomename;
+    ImageView b1, b2,b3,propertyprofileImage, edtprofileImage,home,setting;
     Bundle bundle;
-
+Spinner spinnerprppertyname;
+    int propertyexist=0;
+    ArrayAdapter adapter;
     private SensorService mSensorService;
     public HomeFragment() {
 
@@ -64,11 +70,15 @@ public class HomeFragment extends Fragment {
 
         b1 = (ImageView) rootView.findViewById(R.id.b1);
         b2 = (ImageView) rootView.findViewById(R.id.b2);
+        b3 = (ImageView) rootView.findViewById(R.id.b3);
+        spinnerprppertyname = (Spinner) rootView.findViewById(R.id.spinnerprppertyname);
 
 
-
-        txtbookingsno = (TextView) rootView.findViewById(R.id.txtnotice1);
-        edtlogoImage = (ImageView) rootView.findViewById(R.id.imgLogo);
+        txtnotifications = (TextView) rootView.findViewById(R.id.txtnotice1);
+        txtaddress = (TextView) rootView.findViewById(R.id.txtaddress);
+        txttotalannualcost = (TextView) rootView.findViewById(R.id.txttotalannualcost);
+        txtwelcomename = (TextView) rootView.findViewById(R.id.txtwelcomename);
+        propertyprofileImage = (ImageView) rootView.findViewById(R.id.propertyprofileImage);
         edtprofileImage = (ImageView) rootView.findViewById(R.id.profileImage);
 
 
@@ -88,15 +98,17 @@ public class HomeFragment extends Fragment {
             Toast.makeText(rootView.getContext(), "Checkggggg your network connection!!",Toast.LENGTH_LONG).show();
         }
         bundle = this.getArguments();
+        FillPropertyData();
+        txtwelcomename.setText("Welcome \n"+activity.firstname);
         try {
-            String query2 = "select id from [CarWash]";
+            String query2 = "select * from [UserProperty]";
             PreparedStatement ps2 = con.prepareStatement(query2);
             ResultSet rs2 = ps2.executeQuery();
             int total=0;
             while (rs2.next()) {
                 total=total+1;
             }
-            //txtcarwashno.setText(String.valueOf(total));
+            txtnotifications.setText(String.valueOf(total));
 
         } catch (Exception ex) {
 
@@ -114,7 +126,7 @@ public class HomeFragment extends Fragment {
             while (rs1.next()) {
                 total = total + 1;
             }
-            txtbookingsno.setText(String.valueOf(total));
+            txtnotifications.setText(String.valueOf(total));
 
         } catch (Exception ex) {
             Log.d("ReminderService In", ex.getMessage() + "######");
@@ -152,7 +164,29 @@ public class HomeFragment extends Fragment {
 
         }
 
+        spinnerprppertyname.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                Object item = adapterView.getItemAtPosition(position);
+                // item.toString()
+                if(!spinnerprppertyname.getSelectedItem().toString().equals("Select Property")){
+                    try{
+
+                        FillData(spinnerprppertyname.getSelectedItem().toString());
+                    } catch (Exception ex) {
+                        Log.d("ReminderService In", ex.getMessage().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // TODO Auto-generated method stub
+
+            }
+        });
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,6 +229,70 @@ public class HomeFragment extends Fragment {
 
        // PushNotify();
         return rootView;
+    }
+    public void FillPropertyData() {
+        //==============Fill Data=
+        try {
+
+            String query = "select * from [UserProperty] where [userid]='" + activity.id + "'";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            ArrayList<String> category = new ArrayList<String>();
+            category.add("Select Property");
+            while (rs.next()) {
+                category.add(rs.getString("location"));
+                propertyexist=propertyexist+1;
+            }
+            adapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.spinner_item, category);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            spinnerprppertyname.setAdapter(adapter);
+            if(propertyexist!=0){
+                spinnerprppertyname.setVisibility(View.VISIBLE);
+                spinnerprppertyname.setSelection(1);
+                FillData(spinnerprppertyname.getSelectedItem().toString());
+            }
+
+        } catch (Exception ex) {
+            // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here",Toast.LENGTH_LONG).show();
+        }
+//==========
+    }
+    public void FillData(String location) {
+        //==============Fill Data=
+        try {
+
+            String  query = "select  * from [UserProperty] where [location]='" + location+"'";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+
+            if (rs.getRow() != 0) {
+
+                txtaddress.setText(rs.getString("address").trim());
+                txttotalannualcost.setText(rs.getString("paymentamount").trim());
+
+                ArrayAdapter adapter1 = ArrayAdapter.createFromResource(rootView.getContext(), R.array.status_arrays, R.layout.spinner_item);
+                adapter1.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+                spinnerprppertyname.setSelection(adapter.getPosition(location));
+                if (rs.getString("image") != null) {
+                    byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                    Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                    propertyprofileImage.setImageBitmap(decodebitmap);
+
+                } else {
+
+                    propertyprofileImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.profilephoto));
+
+                }
+
+            }
+
+        } catch (Exception ex) {
+            Log.d("ReminderService In", "An error occurred: " + ex.getMessage());
+        }
+//==========
     }
     public boolean isGoogleMapsInstalled()
     {
