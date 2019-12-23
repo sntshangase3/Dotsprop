@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#303F9F</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#4AA02C</color>
-    <color name="colorGreen">#4AA02C</color>
+    <color name="colorPrimary">#6a0dad</color>
+    <color name="colorPrimaryDark">#6a0dad</color>
+    <color name="colorPrimaryBackGround">#D5BADB</color>
+    <color name="colorAccent">#000080</color>
+    <color name="colorGreen">#000080</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhiteTransparent">#80FFFFFF</color>
     <color name="colorBlack">#000000</color>
@@ -18,7 +19,7 @@
     <color name="help_view">#ff404040</color>
     <!-- background color for entire help view -->
     <color name="result_minor_text">#ffc0c0c0</color>
-    <!-- source language text/label text color. For example, "OCR English" -->
+    <!-- source language text/label text color. For za.sametal.za.dotsprop.za.dotsprop.za.sametal.za.co.sametal, "OCR English" -->
     <color name="result_text">#ffffffff</color>
     <!-- OCR result text color -->
     <color name="result_view">#b0000000</color>
