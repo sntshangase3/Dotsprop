@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/homepage"
-            android:icon="@drawable/home"
-            android:title="Home" />
-        <item android:title="Features"
-            android:icon="@drawable/home"
-            >
-            <menu>
-                <group android:checkableBehavior="single">
+    >
 
-
+                    <item
+                        android:id="@+id/homepage"
+                        android:icon="@drawable/home1"
+                        
+                        android:title="Home" />
+                    <item
+                        android:id="@+id/notification"
+                        android:icon="@drawable/notification"
+                        android:title="Notification Centre" />
+                    <item
+                        android:id="@+id/property"
+                        android:icon="@drawable/home"
+                        android:title="Homeownership" />
+                    <item
+                        android:id="@+id/schedule"
+                        android:icon="@drawable/maintanance"
+                        android:title="Maintanance Schedules" />
+                    <item
+                        android:id="@+id/vehicle"
+                        android:icon="@drawable/ongoingproject"
+                        android:title="On-Going Projects" />
+    <item
+        android:id="@+id/findcontructor"
+        android:icon="@drawable/search"
+        android:title="Find Contractors" />
+    <item
+        android:id="@+id/progress"
+        android:icon="@drawable/radio"
+        android:title="Maintenance Progress" />
                     <item
                         android:id="@+id/profile"
                         android:icon="@drawable/profile"
-                        android:title="Profile" />
+                        android:title="My Account" />
+
                     <item
                         android:id="@+id/contact"
                         android:icon="@drawable/contact"
@@ -27,11 +47,9 @@
                         android:id="@+id/logout"
                         android:icon="@drawable/logout"
                         android:title="Logout" />
-                </group>
-            </menu>
-        </item>
 
-    </group>
+
+
 
 
 
