@@ -4,28 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/colorPrimaryBackGround"
+    tools:context="com.sametal.za.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryBackGround"
          android:theme="@style/AppTheme.AppBarOverlay">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
+                android:background="@color/colorPrimaryBackGround"
 
             app:popupTheme="@style/AppTheme.PopupOverlay">
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PokeMon"
-                android:gravity="center_horizontal"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textColor="@color/colorWhite"
+             android:src="@drawable/dotsprop_word"
                 android:layout_gravity="center"
                 />
 

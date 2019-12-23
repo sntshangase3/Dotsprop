@@ -9,18 +9,15 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/logo"
+        android:src="@drawable/dotsprop_word"
         android:visibility="visible" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Discovery"
-
+        android:text="Dotsprop"
         android:textColor="@color/colorPrimary"
-        android:textSize="30sp"
-
+        android:textSize="20sp"
      android:textStyle="italic"
-
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
      />

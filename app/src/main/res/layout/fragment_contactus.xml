@@ -83,13 +83,7 @@ android:layout_gravity="center"
             android:src="@drawable/twitter"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.1" />
-        <ImageView
-            android:id="@+id/instagram"
-            android:layout_width="@dimen/large_brush"
-            android:layout_height="@dimen/large_brush"
-            android:src="@drawable/instagram"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.1" />
+
         <ImageView
             android:id="@+id/web"
             android:layout_width="@dimen/large_brush"
@@ -106,7 +100,7 @@ android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:textColor="@color/colorGray"
         android:layout_gravity="center"
-        android:text="Cape Town - Century City"
+        android:text="Cape Town - Epping"
         android:textSize="20dp"
         android:textStyle="bold"
         />
@@ -116,15 +110,14 @@ android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:textColor="@color/colorGray"
         android:layout_gravity="center"
-        android:text="PokeMon App a platform of"
-
+        android:text="14 Christian Avenue,Epping 2"
         />
     <TextView
            android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorGray"
         android:layout_gravity="center"
-        android:text="Discovery Health (Pty)Ltd"
+        android:text="Cape Town– South Africa"
 
         />
 
@@ -138,7 +131,7 @@ android:layout_gravity="center"
         android:textColor="#454545"
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
-        android:text="Powered by Sibusiso" />
+        android:text="Powered by SA Metal Dev" />
 
 
 
