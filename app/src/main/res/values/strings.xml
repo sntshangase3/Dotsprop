@@ -17,7 +17,18 @@
         <item>Still Paying</item>
         <item>Renting</item>
     </string-array>
-
+    <string-array name="province_arrays">
+        <item>Select Province</item>
+        <item>Western Cape</item>
+        <item>Eastern Cape</item>
+        <item>Northern Cape</item>
+        <item>North West</item>
+        <item>Free State</item>
+        <item>Kwazulu Natal</item>
+        <item>Gauteng</item>
+        <item>Limpopo</item>
+        <item>Mpumalanga</item>
+    </string-array>
     <string-array name="bank_arrays">
         <item>Select Bank</item>
         <item>ABSA</item>

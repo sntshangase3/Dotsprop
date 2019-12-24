@@ -2,7 +2,6 @@ package com.sametal.za;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,13 +22,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +36,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,64 +53,40 @@ public class RegisterContractorFrag extends Fragment {
     //---------con--------
     Connection con;
     String un, pass, db, ip;
-    ConnectionClass connectionClass;
-    EditText edtappuserId, edtuserrole, edtfirstname,edtstreet,edtsuburb,edtcity,edtpostalcode,  edtemail, edtpassword, edtcontactno,edtprovice,edtdatebirth;
+
+    EditText edtcontactname, edtbusinessname,edtaddress,edtservice,  edtemail, edtcontactno,edtrelatedfield,edtnumberofserviceyears,edtnumberofemployees;
     ImageView edtprofileImage;
     Button btncreate, btnsave;
 
-
-    ListView lstproduct;
-    private int mYear, mMonth, mDay, mHour, mMinute, mSeconds, mMSeconds;
-    Calendar c;
-    //---------con--------
-
-    int PLACE_PICKER_REQUEST = 1;
-    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    private static final String API_KEY = "AIzaSyA1RX5FgK6qKIuHOkQP6D40uEEaL5eLi0w";
-    Calendar cal;
-    int hour;
-    int min = 0;
-    int sec;
     MainActivity activity = MainActivity.instance;
     byte[] byteArray;
-    String encodedImage;
-    TextView txtterms;
-    CheckBox chkterms;
-    String address ="";
-    String lonlat="";
+    String encodedImage,service="";
 
+    Spinner spinnerprovince,spinnerservice;
+    ArrayAdapter adapter;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.register, container, false);
+        rootView = inflater.inflate(R.layout.registercontructor, container, false);
 
-
-        edtappuserId = (EditText) rootView.findViewById(R.id.edtappuserid);
-        edtuserrole = (EditText) rootView.findViewById(R.id.edtuserrole);
-        edtfirstname = (EditText) rootView.findViewById(R.id.edtfirstname);
-
-        edtstreet = (EditText) rootView.findViewById(R.id.edtstreet); edtsuburb = (EditText) rootView.findViewById(R.id.edtsuburb);
-        edtcity = (EditText) rootView.findViewById(R.id.edtcity);  edtpostalcode = (EditText) rootView.findViewById(R.id.edtpostalcode);
-
-
+        edtcontactname = (EditText) rootView.findViewById(R.id.edtfirstname);
+        edtbusinessname = (EditText) rootView.findViewById(R.id.edtbusinessname);
+        edtaddress = (EditText) rootView.findViewById(R.id.edtaddress);
+        spinnerprovince = (Spinner) rootView.findViewById(R.id.spinnerprovince);
+        spinnerservice = (Spinner) rootView.findViewById(R.id.spinnerservice);
         edtemail = (EditText) rootView.findViewById(R.id.edtemail);
-        edtpassword = (EditText) rootView.findViewById(R.id.edtpassword);
-        edtcontactno = (EditText) rootView.findViewById(R.id.edtcontactno);
+        edtrelatedfield = (EditText) rootView.findViewById(R.id.edtrelatedfield);
 
-
-        txtterms = (TextView) rootView.findViewById(R.id.txtterms);
-
-        edtdatebirth = (EditText) rootView.findViewById(R.id.edtdatebirth);
-        edtprovice = (EditText) rootView.findViewById(R.id.edtprovice);
-
-        edtappuserId.setVisibility(View.GONE);
-        edtuserrole.setVisibility(View.GONE);
-
+        edtnumberofserviceyears = (EditText) rootView.findViewById(R.id.edtnumberofserviceyears);
+        edtnumberofemployees = (EditText) rootView.findViewById(R.id.edtnumberofemployees);
+        edtservice = (EditText) rootView.findViewById(R.id.edtservice);
         btncreate = (Button) rootView.findViewById(R.id.btn_create);
         btnsave = (Button) rootView.findViewById(R.id.btn_save);
         edtprofileImage = (ImageView) rootView.findViewById(R.id.profileImage);
-        chkterms = (CheckBox) rootView.findViewById(R.id.chkterms);
 
 
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(rootView.getContext(), R.array.province_arrays, R.layout.spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerprovince.setAdapter(adapter);
 
 
         // Declaring Server ip, username, database name and password
@@ -120,55 +94,18 @@ public class RegisterContractorFrag extends Fragment {
         db = "Dotsprop";
         un = "sqaloits";
         pass = "422q5mfQzU";
+        ConnectionClass cn=new ConnectionClass();
+        con =cn.connectionclass(un, pass, db, ip);
 
+        if (con == null)
+        {
+            Toast.makeText(rootView.getContext(), "Check your network connection!!",Toast.LENGTH_LONG).show();
+        }
 
         FillData();
         Bundle bundle = this.getArguments();
-        try {
-            if (bundle != null) {
 
-                if (bundle.getString("termsread").toString().equals("termsread")) {
-                    chkterms.setChecked(true);
-                } else {
-                    chkterms.setChecked(false);
-                }
 
-            }
-        } catch (Exception ex) {
-
-        }
-        edtfirstname.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-
-                try{
-                    Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
-                    Drawable bg = getResources().getDrawable(R.drawable.edittext_bground);
-                    if((s.length() != 0)&&!chkterms.isChecked()){
-                        txtterms.setBackground(errorbg);
-                        Toast.makeText(rootView.getContext(), "Please read terms,scroll up to the bottom", Toast.LENGTH_LONG).show();
-                    } else{
-                        txtterms.setBackground(bg);
-                    }
-
-                }catch (Exception ex){
-
-                }
-
-            }
-        });
         edtemail.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -200,40 +137,15 @@ public class RegisterContractorFrag extends Fragment {
             }
         });
 
-        txtterms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment frag = new TermsFrag();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.mainFrame, frag).commit();
 
-
-            }
-        });
-        chkterms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Fragment frag = new TermsFrag();
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.mainFrame, frag).commit();
-                } else {
-                    Toast.makeText(rootView.getContext(), "Please read terms,scroll up to the bottom", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
 
         btncreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (chkterms.isChecked()) {
+
                     CreateProfile addPro = new CreateProfile();
                     addPro.execute("");
-                } else {
-                    Toast.makeText(rootView.getContext(), "Please read terms,scroll up to the bottom", Toast.LENGTH_LONG).show();
-                }
+
 
 
             }
@@ -257,10 +169,55 @@ public class RegisterContractorFrag extends Fragment {
             }
         });
 
+FillServiceData();
+        spinnerservice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                      // item.toString()
+                if(!spinnerservice.getSelectedItem().toString().equals("Select Service")){
+                    try{
+                        service=service+spinnerservice.getSelectedItem().toString()+",";
+                        edtservice.setText(service);
+
+                    } catch (Exception ex) {
+                        Log.d("ReminderService In", ex.getMessage().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // TODO Auto-generated method stub
+
+            }
+        });
         return rootView;
     }
+    public void FillServiceData() {
+        //==============Fill Data=
+        try {
 
+            String query = "select * from [UserProperty] where [userid]='" + activity.id + "'";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            ArrayList<String> category = new ArrayList<String>();
+            category.add("Select Service");
+            while (rs.next()) {
+                category.add(rs.getString("location"));
+
+            }
+            adapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.spinner_item, category);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            spinnerservice.setAdapter(adapter);
+
+
+        } catch (Exception ex) {
+            // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here",Toast.LENGTH_LONG).show();
+        }
+//==========
+    }
     //===Upload profile
     private void selectImage() {
 
@@ -449,27 +406,8 @@ public class RegisterContractorFrag extends Fragment {
     public void FillData() {
         //==============Fill Data=
         try {
-            ConnectionClass cn = new ConnectionClass();
-            con = cn.connectionclass(un, pass, db, ip);
-            if (con == null) {
 
-                CharSequence text = "Check your network connection!!";
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(rootView.getContext(), text, duration);
-                toast.show();
-            } else {
-
-
-                if (activity.edthidenuserid.getText().toString().equals("")) {
-                    edtuserrole.setText("2");
-                    // btnsave.setVisibility(View.GONE);
-                    // btncreate.setVisibility(View.VISIBLE);
-                } else {
-                    edtappuserId.setText(activity.edthidenuserid.getText().toString());
-                    edtuserrole.setText("2");
-//btncreate.setVisibility(View.GONE);
-                    // btnsave.setVisibility(View.VISIBLE);
-                    String query = "select * from [AppUser] where [id]=" + Integer.parseInt(edtappuserId.getText().toString());
+                    String query = "select * from [Contractor] where [userid]=" + Integer.parseInt(activity.id);
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     rs.next();
@@ -477,25 +415,21 @@ public class RegisterContractorFrag extends Fragment {
 
                     if (rs.getRow() != 0) {
 
-                        edtfirstname.setText(rs.getString("firstname"));
-
-                        address = rs.getString("location").trim();
-                        edtstreet.setText(address.substring(0,address.indexOf(',')));
-                        address=address.substring(address.indexOf(',')+1).trim();
-                        edtsuburb.setText(address.substring(0,address.indexOf(',')));
-                        address=address.substring(address.indexOf(',')+1).trim();
-                        edtcity.setText(address.substring(0,address.indexOf(',')));
-                        address=address.substring(address.indexOf(',')+1).trim();
-                        edtpostalcode.setText(address.substring(0,address.indexOf(',')));
-
-
+                        edtcontactname.setText(rs.getString("contactname"));
+                        edtbusinessname.setText(rs.getString("contactname"));
                         edtemail.setText(rs.getString("email"));
-                        edtpassword.setText(rs.getString("password"));
                         edtcontactno.setText(rs.getString("contact"));
-                        edtprovice.setText(rs.getString("provice"));
-                        edtdatebirth.setText(rs.getString("dob"));
+                        edtaddress.setText(rs.getString("address"));
 
-                        edtuserrole.setText(rs.getString("userRole"));
+                        edtservice.setText(rs.getString("service"));
+                        edtrelatedfield.setText(rs.getString("relatedfield"));
+                        edtnumberofserviceyears.setText(rs.getString("numberofserviceyears"));
+                        edtnumberofemployees.setText(rs.getString("numberofemployees"));
+
+                        ArrayAdapter adapter1 = ArrayAdapter.createFromResource(rootView.getContext(), R.array.status_arrays, R.layout.spinner_item);
+                        adapter1.setDropDownViewResource(R.layout.spinner_dropdown_item);
+                        spinnerprovince.setSelection(adapter1.getPosition(rs.getString("province")));
+
 
                         if (rs.getString("image") != null) {
                             byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
@@ -511,11 +445,6 @@ public class RegisterContractorFrag extends Fragment {
 
 
                     }
-                }
-
-
-            }
-
 
         } catch (Exception ex) {
             // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here",Toast.LENGTH_LONG).show();
@@ -537,20 +466,19 @@ public class RegisterContractorFrag extends Fragment {
         Boolean isSuccess = false;
 
 
-        String firstname = edtfirstname.getText().toString();
-
-        String street = edtstreet.getText().toString();
-        String suburb = edtsuburb.getText().toString();
-        String city = edtcity.getText().toString();
-        String postal = edtpostalcode.getText().toString();
-
-
+        String contacttname = edtcontactname.getText().toString();
+        String businessname = edtbusinessname.getText().toString();
+        String province = spinnerprovince.getSelectedItem().toString();
+        String address = edtaddress.getText().toString();
         String email = edtemail.getText().toString();
-        String password = edtpassword.getText().toString();
+
+
+        String numberofyears = edtnumberofserviceyears.getText().toString();
+        String numberofemployees = edtnumberofemployees.getText().toString();
         String contact = edtcontactno.getText().toString();
-        String province = edtprovice.getText().toString();
-        String dob = edtdatebirth.getText().toString();
-        int userrole = Integer.parseInt(edtuserrole.getText().toString());
+        String relatedfield = edtrelatedfield.getText().toString();
+        String service = edtservice.getText().toString();
+
 
         // int birthyear =Integer.parseInt( spinnerbirthyear.getSelectedItem().toString());
         // String gender = spinnergender.getSelectedItem().toString();
@@ -576,31 +504,31 @@ public class RegisterContractorFrag extends Fragment {
             } else {
                 Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
                 Drawable bg = getResources().getDrawable(R.drawable.edittext_bground);
-                if ((edtfirstname.getText().toString().trim().equals(""))) {
-                    edtfirstname.setBackground(errorbg);
+                if ((edtcontactname.getText().toString().trim().equals(""))) {
+                    edtcontactname.setBackground(errorbg);
                 } else {
-                    edtfirstname.setBackground(bg);
+                    edtcontactname.setBackground(bg);
                 }
 
-                if ((edtstreet.getText().toString().trim().equals(""))) {
-                    edtstreet.setBackground(errorbg);
+                if ((edtbusinessname.getText().toString().trim().equals(""))) {
+                    edtbusinessname.setBackground(errorbg);
                 } else {
-                    edtstreet.setBackground(bg);
+                    edtbusinessname.setBackground(bg);
                 }
-                if ((edtsuburb.getText().toString().trim().equals(""))) {
-                    edtsuburb.setBackground(errorbg);
+                if (( spinnerprovince.getSelectedItem().toString().equals("Select Province"))) {
+                    spinnerprovince.setBackground(errorbg);
                 } else {
-                    edtsuburb.setBackground(bg);
+                    spinnerprovince.setBackground(bg);
                 }
-                if ((edtcity.getText().toString().trim().equals(""))) {
-                    edtcity.setBackground(errorbg);
+                if ((edtaddress.getText().toString().trim().equals(""))) {
+                    edtaddress.setBackground(errorbg);
                 } else {
-                    edtcity.setBackground(bg);
+                    edtaddress.setBackground(bg);
                 }
-                if ((edtpostalcode.getText().toString().trim().equals(""))) {
-                    edtpostalcode.setBackground(errorbg);
+                if ((edtemail.getText().toString().trim().equals(""))) {
+                    edtemail.setBackground(errorbg);
                 } else {
-                    edtpostalcode.setBackground(bg);
+                    edtemail.setBackground(bg);
                 }
 
                 if ((edtemail.getText().toString().trim().equals("")) ||!emailValidator(edtemail.getText().toString())) {
@@ -609,10 +537,10 @@ public class RegisterContractorFrag extends Fragment {
                     edtemail.setBackground(bg);
                 }
 
-                if ((edtpassword.getText().toString().trim().equals(""))) {
-                    edtpassword.setBackground(errorbg);
+                if ((edtnumberofemployees.getText().toString().trim().equals(""))) {
+                    edtnumberofemployees.setBackground(errorbg);
                 } else {
-                    edtpassword.setBackground(bg);
+                    edtnumberofemployees.setBackground(bg);
                 }
 
                 if ((edtcontactno.getText().toString().trim().equals(""))) {
@@ -620,16 +548,12 @@ public class RegisterContractorFrag extends Fragment {
                 } else {
                     edtcontactno.setBackground(bg);
                 }
-                if ((edtdatebirth.getText().toString().trim().equals(""))) {
-                    edtdatebirth.setBackground(errorbg);
+                if ((edtnumberofserviceyears.getText().toString().trim().equals(""))) {
+                    edtnumberofserviceyears.setBackground(errorbg);
                 } else {
-                    edtdatebirth.setBackground(bg);
+                    edtnumberofserviceyears.setBackground(bg);
                 }
-                if ((edtprovice.getText().toString().trim().equals(""))) {
-                    edtprovice.setBackground(errorbg);
-                } else {
-                    edtprovice.setBackground(bg);
-                }
+
 
 
                 if ((z.equals("Email Address Already Exist"))) {
@@ -647,7 +571,7 @@ public class RegisterContractorFrag extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            if (firstname.trim().equals("")|| street.trim().equals("")|| suburb.trim().equals("")||province.trim().equals("")||dob.trim().equals("")|| city.trim().equals("")|| postal.trim().equals("") || email.trim().equals("") || password.trim().equals("") || contact.trim().equals(""))
+            if (contacttname.trim().equals("")|| businessname.trim().equals("")|| province.trim().equals("")||email.trim().equals("")||contact.trim().equals("")|| service.trim().equals("")|| numberofemployees.trim().equals("") || numberofyears.trim().equals("") || relatedfield.trim().equals("") )
                 z = "Please fill in all required details...";
             else {
                 try {
@@ -667,14 +591,14 @@ public class RegisterContractorFrag extends Fragment {
                             if (rs.getRow() != 0) {
                                 z = "Email Address Already Exist";
                             }else{
-                                address = street+", "+suburb+", "+city+", "+postal+", South Africa";
 
 
-                                    String query = "insert into [AppUser]([firstname],[location],[email],[password],[contact],[provice],[dob],[userRole],[image]) " +
-                                            "values ('" + firstname + "','" + address + "','" + email + "','" + password + "','" + contact + "','" + province + "','" +dob + "','" + userrole + "','" + encodedImage + "')";
+
+                                    String query = "insert into [Contractor]([contactname],[businessname],[province],[address],[email],[contact],[service],[numberofserviceyears],[numberofemployees],[relatedfield],[image],[userid]) " +
+                                            "values ('" + contacttname + "','" + businessname + "','" + province + "','" + address + "','" + email + "','" + contact + "','" + service + "','" +numberofyears + "','" + numberofemployees + "','" + relatedfield + "','" + encodedImage + "','" + activity.id + "')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
-                                    z = "Profile Created,please Login";
+                                    z = "Profile Created";
                                     isSuccess = true;
 
 
@@ -706,22 +630,18 @@ public class RegisterContractorFrag extends Fragment {
         Boolean isSuccess = false;
 
 
-        String firstname = edtfirstname.getText().toString();
-
-        String street = edtstreet.getText().toString();
-        String suburb = edtsuburb.getText().toString();
-        String city = edtcity.getText().toString();
-        String postal = edtpostalcode.getText().toString();
-
+        String contacttname = edtcontactname.getText().toString();
+        String businessname = edtbusinessname.getText().toString();
+        String province = spinnerprovince.getSelectedItem().toString();
+        String address = edtaddress.getText().toString();
         String email = edtemail.getText().toString();
-        String password = edtpassword.getText().toString();
+
+
+        String numberofyears = edtnumberofserviceyears.getText().toString();
+        String numberofemployees = edtnumberofemployees.getText().toString();
         String contact = edtcontactno.getText().toString();
-        String province = edtprovice.getText().toString();
-        String dob = edtdatebirth.getText().toString();
-
-
-        int userid = Integer.parseInt(edtappuserId.getText().toString());
-
+        String relatedfield = edtrelatedfield.getText().toString();
+        String service = edtservice.getText().toString();
 
         @Override
         protected void onPreExecute() {
@@ -741,31 +661,31 @@ public class RegisterContractorFrag extends Fragment {
             } else {
                 Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
                 Drawable bg = getResources().getDrawable(R.drawable.edittext_bground);
-                if ((edtfirstname.getText().toString().trim().equals(""))) {
-                    edtfirstname.setBackground(errorbg);
+                if ((edtcontactname.getText().toString().trim().equals(""))) {
+                    edtcontactname.setBackground(errorbg);
                 } else {
-                    edtfirstname.setBackground(bg);
+                    edtcontactname.setBackground(bg);
                 }
 
-                if ((edtstreet.getText().toString().trim().equals(""))) {
-                    edtstreet.setBackground(errorbg);
+                if ((edtbusinessname.getText().toString().trim().equals(""))) {
+                    edtbusinessname.setBackground(errorbg);
                 } else {
-                    edtstreet.setBackground(bg);
+                    edtbusinessname.setBackground(bg);
                 }
-                if ((edtsuburb.getText().toString().trim().equals(""))) {
-                    edtsuburb.setBackground(errorbg);
+                if (( spinnerprovince.getSelectedItem().toString().equals("Select Province"))) {
+                    spinnerprovince.setBackground(errorbg);
                 } else {
-                    edtsuburb.setBackground(bg);
+                    spinnerprovince.setBackground(bg);
                 }
-                if ((edtcity.getText().toString().trim().equals(""))) {
-                    edtcity.setBackground(errorbg);
+                if ((edtaddress.getText().toString().trim().equals(""))) {
+                    edtaddress.setBackground(errorbg);
                 } else {
-                    edtcity.setBackground(bg);
+                    edtaddress.setBackground(bg);
                 }
-                if ((edtpostalcode.getText().toString().trim().equals(""))) {
-                    edtpostalcode.setBackground(errorbg);
+                if ((edtemail.getText().toString().trim().equals(""))) {
+                    edtemail.setBackground(errorbg);
                 } else {
-                    edtpostalcode.setBackground(bg);
+                    edtemail.setBackground(bg);
                 }
 
                 if ((edtemail.getText().toString().trim().equals("")) ||!emailValidator(edtemail.getText().toString())) {
@@ -774,10 +694,10 @@ public class RegisterContractorFrag extends Fragment {
                     edtemail.setBackground(bg);
                 }
 
-                if ((edtpassword.getText().toString().trim().equals(""))) {
-                    edtpassword.setBackground(errorbg);
+                if ((edtnumberofemployees.getText().toString().trim().equals(""))) {
+                    edtnumberofemployees.setBackground(errorbg);
                 } else {
-                    edtpassword.setBackground(bg);
+                    edtnumberofemployees.setBackground(bg);
                 }
 
                 if ((edtcontactno.getText().toString().trim().equals(""))) {
@@ -785,20 +705,19 @@ public class RegisterContractorFrag extends Fragment {
                 } else {
                     edtcontactno.setBackground(bg);
                 }
-                if ((edtprovice.getText().toString().trim().equals(""))) {
-                    edtprovice.setBackground(errorbg);
+                if ((edtnumberofserviceyears.getText().toString().trim().equals(""))) {
+                    edtnumberofserviceyears.setBackground(errorbg);
                 } else {
-                    edtprovice.setBackground(bg);
-                }
-                if ((edtdatebirth.getText().toString().trim().equals(""))) {
-                    edtdatebirth.setBackground(errorbg);
-                } else {
-                    edtdatebirth.setBackground(bg);
+                    edtnumberofserviceyears.setBackground(bg);
                 }
 
 
 
-
+                if ((z.equals("Email Address Already Exist"))) {
+                    edtemail.setBackground(errorbg);
+                } else {
+                    edtemail.setBackground(bg);
+                }
                 Toast.makeText(rootView.getContext(), r, Toast.LENGTH_SHORT).show();
             }
 
@@ -807,28 +726,17 @@ public class RegisterContractorFrag extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            if (firstname.trim().equals("")|| street.trim().equals("")|| suburb.trim().equals("")|| city.trim().equals("")||province.trim().equals("")||dob.trim().equals("")|| postal.trim().equals("") || email.trim().equals("") || password.trim().equals("") || contact.trim().equals(""))
+            if (contacttname.trim().equals("")|| businessname.trim().equals("")|| province.trim().equals("")||email.trim().equals("")||contact.trim().equals("")|| service.trim().equals("")|| numberofemployees.trim().equals("") || numberofyears.trim().equals("") || relatedfield.trim().equals("") )
                 z = "Please fill in all details...";
             else {
                 try {
-                    ConnectionClass cn = new ConnectionClass();
-                    con = cn.connectionclass(un, pass, db, ip);
-                    if (con == null) {
-                        z = "Check your network connection!!";
 
-                    } else {
-
-                        address = street+", "+suburb+", "+city+", "+postal+", South Africa";
-                        //LatLon(address);
-                        if(!lonlat.equals("")){
-                            String query = "Update [AppUser] set [firstname]='" + firstname + "',[location]='" + address + "' ,[email]='" + email + "',[password]='" + password + "',[contact]='" + contact + "',[provice]='" + province + "' ,[dob]='" + dob + "',[image]='" + encodedImage + "'  where [id]=" + userid;
-                            PreparedStatement preparedStatement = con.prepareStatement(query);
+                    String query = "update [Contractor] set [contactname]='" + contacttname + "',[businessname]='" + businessname + "',[province]='" + province + "',[address]='" + address + "',[email]='" + email + "',[contact]='" + contact + "',[service]='" + service + "',[numberofserviceyears]='" +numberofyears + "',[numberofemployees]='" + numberofemployees + "',[relatedfield]='" + relatedfield + "',[image]='" + encodedImage + "' where [userid]='" + activity.id + "'";
+                    PreparedStatement preparedStatement = con.prepareStatement(query);
                             preparedStatement.executeUpdate();
                             z = "Updated Successfully";
                             isSuccess = true;
-                        }
 
-                    }
                 } catch (Exception ex) {
                     isSuccess = false;
                     // z = "Exceptions";

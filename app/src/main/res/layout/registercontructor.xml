@@ -1,0 +1,399 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Contractor Profile"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:typeface="sans" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinnerprppertyname"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/button_bground"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Contact Name *" />
+
+                <EditText
+                    android:id="@+id/edtcontactname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Business Name *" />
+
+                <EditText
+                    android:id="@+id/edtbusinessname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Select Provinces" />
+
+                <Spinner
+                    android:id="@+id/spinnerprovince"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Operate Province"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5d5d5d"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:gravity="top|left"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/edtprovince" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Address" />
+
+                <EditText
+                    android:id="@+id/edtaddress"
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:hint="3 Poll St,Brooklyn,Cape Town,7405"
+                    android:inputType="textEmailAddress"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Email *" />
+
+                <EditText
+                    android:id="@+id/edtemail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Contact *" />
+
+                <EditText
+                    android:id="@+id/edtcontact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Select Service *" />
+
+                <Spinner
+                    android:id="@+id/spinnerservice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Services *" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5d5d5d"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:gravity="top|left"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/edtservice" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Service Years * " />
+
+                <EditText
+                    android:id="@+id/edtnumberofserviceyears"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:hint="Number of years in Service"
+                    android:inputType="number"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Employees *" />
+
+                <EditText
+                    android:id="@+id/edtnumberofemployees"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:hint="Number of Employees"
+                    android:inputType="number"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Related Field " />
+
+                <EditText
+                    android:id="@+id/edtrelatedfield"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+                    android:hint="e.g Professional,Authority"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Image" />
+
+                <ImageView
+                    android:id="@+id/propertyprofileImage"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/profilephoto" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+                <Button
+                    android:id="@+id/btn_create"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_marginTop="1dp"
+
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bground"
+                    android:padding="7dp"
+                    android:text="Register"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bground"
+                    android:padding="7dp"
+                    android:text="Update"
+                    android:textColor="@color/colorPrimaryDark" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

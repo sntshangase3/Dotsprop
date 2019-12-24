@@ -95,7 +95,7 @@ Spinner spinnerprppertyname;
 
         if (con == null)
         {
-            Toast.makeText(rootView.getContext(), "Checkggggg your network connection!!",Toast.LENGTH_LONG).show();
+            Toast.makeText(rootView.getContext(), "Check your network connection!!",Toast.LENGTH_LONG).show();
         }
         bundle = this.getArguments();
         FillPropertyData();
