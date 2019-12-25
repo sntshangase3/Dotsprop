@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.mainFrame, fragment).commit();
         }
         else if (id == R.id.findcontructor) {
-            fragment = new UserProfileFrag();
+            fragment = new RegisterContractorFrag();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.mainFrame, fragment).commit();

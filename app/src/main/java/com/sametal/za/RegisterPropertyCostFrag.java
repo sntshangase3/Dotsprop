@@ -46,7 +46,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by sibusison on 2017/07/30.
  */
-public class RegisterContractorFrag extends Fragment {
+public class RegisterPropertyCostFrag extends Fragment {
 
     View rootView;
 

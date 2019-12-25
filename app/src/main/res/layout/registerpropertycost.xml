@@ -12,10 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Contractor Profile"
+        android:textStyle="bold"
+        android:text="Homeownership Cost"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="25dp"
         android:typeface="sans" />
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,29 +30,15 @@
             android:layout_height="match_parent"
             android:background="#ffffff"
             android:orientation="vertical">
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/spinnerprppertyname"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@drawable/button_bground"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
+                android:text="Property Cost"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp"
+                android:typeface="sans" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -62,10 +50,92 @@
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Contact Name *" />
+                    android:text="Insurance *" />
 
                 <EditText
-                    android:id="@+id/edtcontactname"
+                    android:id="@+id/edtinsurance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/edittext_bground"
+android:hint="Home Insurance"
+                    android:inputType="number"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Bond/Mortgage *" />
+
+                <EditText
+                    android:id="@+id/edbond"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:inputType="number"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Association *" />
+
+                <EditText
+                    android:id="@+id/edtassociation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:hint="Homeowners Association"
+                    android:inputType="number"
+                    android:background="@drawable/edittext_bground"
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Municipality Cost"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp"
+                android:typeface="sans" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Taxes Rates *" />
+
+                <EditText
+                    android:id="@+id/edttaxrates"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
@@ -86,10 +156,10 @@
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Business Name *" />
+                    android:text="Electricity *" />
 
                 <EditText
-                    android:id="@+id/edtbusinessname"
+                    android:id="@+id/edtelectricity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
@@ -109,60 +179,10 @@
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Select Provinces" />
-
-                <Spinner
-                    android:id="@+id/spinnerprovince"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:background="@drawable/edittext_bground"
-                    android:padding="5dp"
-                    android:textColor="#5d5d5d" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="120sp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Address" />
+                    android:text="Water *" />
 
                 <EditText
-                    android:id="@+id/edtaddress"
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@drawable/edittext_bground"
-                    android:hint="3 Poll St,Brooklyn,Cape Town,7405"
-                    android:inputType="textEmailAddress"
-                    android:padding="5dp"
-                    android:textColor="#5d5d5d" />
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="120sp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Email *" />
-
-                <EditText
-                    android:id="@+id/edtemail"
+                    android:id="@+id/edtwater"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
@@ -170,6 +190,15 @@
                     android:padding="5dp"
                     android:textColor="#5d5d5d" />
             </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Maintenance Cost"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp"
+                android:typeface="sans" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -181,18 +210,20 @@
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Contact *" />
+                    android:text="Cleaning *" />
 
                 <EditText
-                    android:id="@+id/edtcontact"
+                    android:id="@+id/edtcleaning"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
+                    android:inputType="number"
                     android:background="@drawable/edittext_bground"
                     android:padding="5dp"
                     android:textColor="#5d5d5d" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -203,61 +234,15 @@
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Select Service *" />
-
-                <Spinner
-                    android:id="@+id/spinnerservice"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:background="@drawable/edittext_bground"
-                    android:padding="5dp"
-                    android:textColor="#5d5d5d" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="120sp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Services *" />
+                    android:text="Security * " />
 
                 <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#5d5d5d"
-                    android:editable="false"
-                    android:background="@drawable/edittext_bground"
-                    android:padding="5dp"
-                    android:gravity="top|left"
-                    android:layout_marginTop="1dp"
-                    android:id="@+id/edtservice" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="120sp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Service Years * " />
-
-                <EditText
-                    android:id="@+id/edtnumberofserviceyears"
+                    android:id="@+id/edtsecurity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:background="@drawable/edittext_bground"
-                    android:hint="Number of years in Service"
+
                     android:inputType="number"
                     android:padding="5dp"
                     android:textColor="#5d5d5d" />
@@ -273,15 +258,14 @@
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Employees *" />
+                    android:text="Gardening *" />
 
                 <EditText
-                    android:id="@+id/edtnumberofemployees"
+                    android:id="@+id/edtgardening"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:background="@drawable/edittext_bground"
-                    android:hint="Number of Employees"
                     android:inputType="number"
                     android:padding="5dp"
                     android:textColor="#5d5d5d" />
@@ -297,43 +281,17 @@
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Related Field " />
+                    android:text="Home repairs " />
 
                 <EditText
-                    android:id="@+id/edtrelatedfield"
+                    android:id="@+id/edthomerepairs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:background="@drawable/edittext_bground"
-                    android:hint="e.g Professional,Authority"
                     android:padding="5dp"
                     android:textColor="#5d5d5d" />
             </LinearLayout>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="130sp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Image" />
-
-                <ImageView
-                    android:id="@+id/propertyprofileImage"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginTop="2dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/profilephoto" />
-
-            </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"

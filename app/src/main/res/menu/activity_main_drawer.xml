@@ -5,52 +5,48 @@
 
     >
 
-                    <item
-                        android:id="@+id/homepage"
-                        android:icon="@drawable/home1"
-                        
-                        android:title="Home" />
-                    <item
-                        android:id="@+id/notification"
-                        android:icon="@drawable/notification"
-                        android:title="Notification Centre" />
-                    <item
-                        android:id="@+id/property"
-                        android:icon="@drawable/home"
-                        android:title="Homeownership" />
-                    <item
-                        android:id="@+id/schedule"
-                        android:icon="@drawable/maintanance"
-                        android:title="Maintanance Schedules" />
-                    <item
-                        android:id="@+id/vehicle"
-                        android:icon="@drawable/ongoingproject"
-                        android:title="On-Going Projects" />
+    <item
+        android:id="@+id/homepage"
+        android:icon="@drawable/home1"
+
+        android:title="Home" />
+    <item
+        android:id="@+id/notification"
+        android:icon="@drawable/notification"
+        android:title="Notification Centre" />
+    <item
+        android:id="@+id/property"
+        android:icon="@drawable/home"
+        android:title="Homeownership" />
+    <item
+        android:id="@+id/schedule"
+        android:icon="@drawable/maintanance"
+        android:title="Maintanance Schedules" />
+    <item
+        android:id="@+id/vehicle"
+        android:icon="@drawable/ongoingproject"
+        android:title="On-Going Projects" />
     <item
         android:id="@+id/findcontructor"
         android:icon="@drawable/search"
-        android:title="Find Contractors" />
+        android:title="Contractors" />
     <item
         android:id="@+id/progress"
         android:icon="@drawable/radio"
         android:title="Maintenance Progress" />
-                    <item
-                        android:id="@+id/profile"
-                        android:icon="@drawable/profile"
-                        android:title="My Account" />
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/profile"
+        android:title="My Account" />
 
-                    <item
-                        android:id="@+id/contact"
-                        android:icon="@drawable/contact"
-                        android:title="Contact" />
-                    <item
-                        android:id="@+id/logout"
-                        android:icon="@drawable/logout"
-                        android:title="Logout" />
-
-
-
-
+    <item
+        android:id="@+id/contact"
+        android:icon="@drawable/contact"
+        android:title="Contact" />
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/logout"
+        android:title="Logout" />
 
 
 </menu>
