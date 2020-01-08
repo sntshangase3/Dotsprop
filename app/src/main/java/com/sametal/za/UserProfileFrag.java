@@ -1,14 +1,9 @@
 package com.sametal.za;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,7 +23,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -226,7 +220,7 @@ FillDepartmentData();
                         department.add(rs.getString("Department").toString().trim());
                     }
                 final Context c=this.getActivity();
-                UserProfileAdapter adapter = new UserProfileAdapter(this.getActivity(), name,username,department);
+                AddTaskAdapter adapter = new AddTaskAdapter(this.getActivity(), name,username);
                 lstgross.setAdapter(adapter);
                 lstgross.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

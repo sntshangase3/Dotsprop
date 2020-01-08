@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
     boolean doubleBackToExitPressedOnce = false;
 
     LinearLayout loginlayout;
-    TextView txtcreate;
+    TextView txtcreate,txtcreatec;
     NavigationView navigationView;
     FragmentManager fragmentManager;
     String m_Text_user = "";
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity
     Context ctx;
    public String id,firstname,position,email;
     public  int hometimes=0;
+    public int propertyid=0;
     public static final String PREFS_NAME = "MyApp_Settings";
     public Context getCtx() {
         return ctx;
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         edthidenuserid = (EditText) findViewById(R.id.edthidenuserid);
         edthidenuserrole = (EditText) findViewById(R.id.edthidenuserrole);
         txtcreate=this.findViewById(R.id.txtcreate);
+        txtcreatec=this.findViewById(R.id.txtcreatec);
 
 
         instance = this;
@@ -197,6 +199,12 @@ public class MainActivity extends AppCompatActivity
 
     public void CreateAccout(View view){
         Fragment fragment = new RegisterFrag();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.mainFrame, fragment).commit();
+    }
+    public void CreateAccoutC(View view){
+        Fragment fragment = new RegisterContractorFrag();
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.mainFrame, fragment).commit();
@@ -348,11 +356,10 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.mainFrame, fragment).commit();
-        } else if (id == R.id.property) {
-            fragment = new RegisterPropertyFrag();
+        } else if (id == R.id.ownership) {
+            fragment = new HomeOwnershipFrag();
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.mainFrame, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
         }
         else if (id == R.id.profile) {
             fragment = new RegisterFrag();

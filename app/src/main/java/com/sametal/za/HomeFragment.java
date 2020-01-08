@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.Layout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class HomeFragment extends Fragment {
 
     TextView txtnotifications,txtaddress,txttotalannualcost,txtwelcomename;
     ImageView b1, b2,b3,propertyprofileImage, edtprofileImage,home,setting;
+    LinearLayout layouthomeownership;
     Bundle bundle;
 Spinner spinnerprppertyname;
     int propertyexist=0;
@@ -72,7 +75,7 @@ Spinner spinnerprppertyname;
         b2 = (ImageView) rootView.findViewById(R.id.b2);
         b3 = (ImageView) rootView.findViewById(R.id.b3);
         spinnerprppertyname = (Spinner) rootView.findViewById(R.id.spinnerprppertyname);
-
+        layouthomeownership =(LinearLayout) rootView.findViewById(R.id.layouthomeownership);
 
         txtnotifications = (TextView) rootView.findViewById(R.id.txtnotice1);
         txtaddress = (TextView) rootView.findViewById(R.id.txtaddress);
@@ -114,22 +117,17 @@ Spinner spinnerprppertyname;
 
         }
         try {
-            String query;
-            if (activity.position.equals("carwash")) {
-                query = "select  id from [Collection] where Datediff(D,convert(varchar,getDate(),112),Cast([collectionsdate] as date))>=0 and [collectionstatus]='New' and [carwashid]='" + activity.id+"'";
-            } else {
-                query = "select  id from [Collection] where Datediff(D,convert(varchar,getDate(),112),Cast([collectionsdate] as date))>=0 and [carownerid]=" + activity.id;
-            }
-            PreparedStatement ps1 = con.prepareStatement(query);
-            ResultSet rs1 = ps1.executeQuery();
+            String query = "select * from [UserPropertyCostTask]";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
             int total = 0;
-            while (rs1.next()) {
-                total = total + 1;
+            while (rs.next()) {
+                total = total + Integer.parseInt(rs.getString("cost"));
             }
-            txtnotifications.setText(String.valueOf(total));
+            txttotalannualcost.setText("Total annual cost R" + String.valueOf(total));
 
         } catch (Exception ex) {
-            Log.d("ReminderService In", ex.getMessage() + "######");
+            Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
         }
 
         try {
@@ -187,22 +185,65 @@ Spinner spinnerprppertyname;
 
             }
         });
-
-        b1.setOnClickListener(new View.OnClickListener() {
+        layouthomeownership.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                    Fragment fragment = new BookingRequestFrag();
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+                Fragment fragment = new HomeOwnershipFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
 
 
             }
         });
 
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = new RegisterPropertyFrag();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.mainFrame, fragment).commit();
+            }
+        });
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = new RegisterPropertyFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+            }
+        });
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    Fragment fragment = new BookingRequestFrag();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+
+            }
+        });
+
         b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment frag = new CarWashFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, frag).commit();
+
+
+            }
+        });
+        b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -270,7 +311,6 @@ Spinner spinnerprppertyname;
             if (rs.getRow() != 0) {
 
                 txtaddress.setText(rs.getString("address").trim());
-                txttotalannualcost.setText(rs.getString("paymentamount").trim());
 
                 ArrayAdapter adapter1 = ArrayAdapter.createFromResource(rootView.getContext(), R.array.status_arrays, R.layout.spinner_item);
                 adapter1.setDropDownViewResource(R.layout.spinner_dropdown_item);

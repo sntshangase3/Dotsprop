@@ -212,6 +212,7 @@ FillPropertyData();
                     rs.next();
 
                     if (rs.getRow() != 0) {
+                        activity.propertyid=rs.getInt("id");
                         edtlocation.setText(rs.getString("location"));
                         edtaddress.setText(rs.getString("address").trim());
                            edtpaymentamount.setText(rs.getString("paymentamount"));
