@@ -1,0 +1,730 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txthomeownership"
+        android:text="Home Ownership Cost R45000"
+        android:layout_marginTop="10dp"
+        android:typeface="sans"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="center" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:id="@+id/layoutpropertycost"
+                android:orientation="horizontal"
+                android:background="@color/colorPrimaryBackGround"
+                >
+
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/txtpropertycost"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
+
+                    android:textAlignment="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutpropertycostlist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Home Insurance"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:hint="R0"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+
+                        android:id="@+id/txttotalinsurance"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting11"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    >
+                    <ListView
+
+                        android:id="@+id/lstgross11"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Bond/Mortgage"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:hint="R0"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+
+                        android:id="@+id/txttotalbond"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting12"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    >
+                    <ListView
+
+                        android:id="@+id/lstgross12"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Homeowners Association"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:hint="R0"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+
+                        android:id="@+id/txttotalhomeassociate"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting13"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite">
+                    <ListView
+
+                        android:id="@+id/lstgross13"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:id="@+id/layoutmunicipalitycost"
+                android:orientation="horizontal"
+                android:background="@color/colorPrimaryBackGround"
+                >
+
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:id="@+id/txtmunicipalitycost"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
+
+                    android:textAlignment="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutmunicipalitycostlist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Property Taxes and Rates"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="R0"
+                        android:id="@+id/txttotaltaxrates"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting21"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    >
+                    <ListView
+
+                        android:id="@+id/lstgross21"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Electricity"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="R0"
+                        android:id="@+id/txttotalelectricity"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting22"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    >
+                    <ListView
+
+                        android:id="@+id/lstgross22"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Water"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="R0"
+                        android:id="@+id/txttotalwater"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting23"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite">
+                    <ListView
+
+                        android:id="@+id/lstgross23"
+android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+            <Spinner
+                android:layout_width="200dp"
+                android:layout_height="0dp"
+                android:textColor="#5d5d5d"
+                android:background="@drawable/edittext_bground"
+                android:padding="5dp"
+
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="1dp"
+                android:id="@+id/spinnercategory" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:id="@+id/layoutmaintance"
+                android:orientation="horizontal"
+                android:background="@color/colorPrimaryBackGround"
+                >
+
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:id="@+id/txtmaintancecost"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
+
+                    android:textAlignment="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutmaintanance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Cleaning"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="R0"
+                        android:id="@+id/txttotalcleaning"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting31"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    >
+                    <ListView
+
+                        android:id="@+id/lstgross31"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Security"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="R0"
+                        android:id="@+id/txttotalsecurity"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting32"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    >
+                    <ListView
+
+                        android:id="@+id/lstgross32"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Gardening"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="R0"
+                        android:id="@+id/txttotalgardening"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting33"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite">
+                    <ListView
+android:visibility="gone"
+                        android:id="@+id/lstgross33"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Home Repairs"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="R0"
+                        android:id="@+id/txttotalhomerepair"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/setting34"
+                        android:src="@drawable/setting2"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorWhite"
+                    >
+                    <ListView
+
+                        android:id="@+id/lstgross34"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:visibility="gone"
+                        android:divider="@color/colorPrimaryDark"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        >
+                    </ListView>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+android:layout_marginTop="5dp"
+                    >
+
+                    <Spinner
+                        android:layout_width="200dp"
+                        android:layout_height="35dp"
+                        android:textColor="#5d5d5d"
+                        android:background="@drawable/edittext_bground"
+                        android:padding="5dp"
+                        android:layout_marginTop="1dp"
+                        android:id="@+id/spinnerservice" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:hint="e.g R2100"
+                        android:inputType="number"
+                        android:id="@+id/edttaskprice"
+                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:background="@drawable/button_bground"
+                        android:textColor="#303F9F"
+
+                        android:layout_margin="2dp"
+                        android:layout_marginTop="1dp"
+                        android:id="@+id/btn_addtask"
+                        android:text="Add Task" />
+                        />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_bground"
+                    android:textColor="#303F9F"
+
+                    android:layout_margin="2dp"
+                    android:padding="7dp"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/btn_create"
+                    android:text="Done" />
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

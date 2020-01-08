@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+android:scaleType="centerCrop"
+    android:id="@+id/homepage"
+    android:background="@drawable/home_background"
+
+    >
+
+    <RelativeLayout
+        android:id="@+id/btndescription4"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="1dp"
+        android:orientation="vertical"
+    >
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"  >
+
+            <ImageView
+                android:id="@+id/profilePic"
+                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:src="@drawable/profilephoto"
+                android:layout_marginLeft="6dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                />
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        >
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:background="@drawable/button_bground"
+            android:textColor="#303F9F"
+
+            android:layout_margin="2dp"
+            android:layout_marginTop="1dp"
+            android:id="@+id/btn_book"
+            android:text="Book Pro" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:background="@drawable/button_bground"
+            android:textColor="#303F9F"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginRight="40dp"
+            android:id="@+id/btn_call"
+            android:layout_margin="2dp"
+            android:layout_marginTop="1dp"
+
+            android:text="Call Pro" />
+    </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/dishlist"
+            >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+android:gravity="center_horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                 android:text="12 Years"
+                    android:textStyle="bold"
+                    android:id="@+id/txttotalyears"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" of service"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"
+                    />
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="25 Requests"
+                    android:textStyle="bold"
+                    android:id="@+id/txttotalrequest"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" on Dotsprop"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="3 Employees"
+                    android:textStyle="bold"
+                    android:id="@+id/txttotalemployees"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" supervising"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="Gauteng"
+                    android:textStyle="bold"
+                    android:id="@+id/txttprovince"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" of service"
+                    android:layout_marginTop="2dp"
+                    android:layout_margin="2dp"
+                    />
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

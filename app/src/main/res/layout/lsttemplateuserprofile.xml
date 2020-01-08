@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorPrimaryDark"
             android:text="Sibusiso Ntshangase"
             android:textAlignment="center"
             android:id="@+id/lblname"
@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorPrimaryDark"
             android:text="Sibusiso"
             android:textAlignment="center"
             android:id="@+id/lblusername"
@@ -45,7 +45,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorPrimaryDark"
             android:text="Engineering"
             android:textAlignment="center"
             android:id="@+id/lbldepartment"
