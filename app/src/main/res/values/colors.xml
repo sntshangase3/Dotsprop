@@ -7,11 +7,12 @@
     <color name="colorGreen">#000080</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhiteTransparent">#80FFFFFF</color>
-    <color name="colorBlack">#000000</color>
+
     <color name="colorGray">#808080</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorAvoca">#B2C248</color>
     <color name="colorBlue">#0000FF</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorYellow">#FFA500</color>
 
     <color name="help_button_view">#ffcccccc</color>
