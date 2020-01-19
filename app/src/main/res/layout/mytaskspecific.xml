@@ -10,31 +10,7 @@ android:scaleType="centerCrop"
 
     >
 
-    <RelativeLayout
-        android:id="@+id/btndescription4"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="1dp"
-        android:orientation="vertical"
-    >
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"  >
 
-            <ImageView
-                android:id="@+id/profilePic"
-                android:layout_height="fill_parent"
-                android:layout_width="fill_parent"
-                android:src="@drawable/profilephoto"
-                android:layout_marginLeft="6dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                />
-
-
-        </RelativeLayout>
-    </RelativeLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

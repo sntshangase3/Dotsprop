@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.text.Layout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +53,7 @@ public class HomeFragment extends Fragment {
 
     TextView txtnotifications,txtaddress,txttotalannualcost,txtwelcomename;
     ImageView b1, b2,b3,propertyprofileImage, edtprofileImage,home,setting;
-    LinearLayout layouthomeownership;
+    LinearLayout layouthomeownership,layoutmaintanance,layoutongoingproject;
     Bundle bundle;
 Spinner spinnerprppertyname;
     int propertyexist=0;
@@ -74,8 +73,12 @@ Spinner spinnerprppertyname;
         b1 = (ImageView) rootView.findViewById(R.id.b1);
         b2 = (ImageView) rootView.findViewById(R.id.b2);
         b3 = (ImageView) rootView.findViewById(R.id.b3);
+        home = (ImageView) rootView.findViewById(R.id.home);
+        setting = (ImageView) rootView.findViewById(R.id.setting);
         spinnerprppertyname = (Spinner) rootView.findViewById(R.id.spinnerprppertyname);
         layouthomeownership =(LinearLayout) rootView.findViewById(R.id.layouthomeownership);
+        layoutmaintanance =(LinearLayout) rootView.findViewById(R.id.layoutmaintanance);
+        layoutongoingproject =(LinearLayout) rootView.findViewById(R.id.layoutongoingproject);
 
         txtnotifications = (TextView) rootView.findViewById(R.id.txtnotice1);
         txtaddress = (TextView) rootView.findViewById(R.id.txtaddress);
@@ -104,7 +107,7 @@ Spinner spinnerprppertyname;
         FillPropertyData();
         txtwelcomename.setText("Welcome \n"+activity.firstname);
         try {
-            String query2 = "select * from [UserProperty]";
+            String query2 = "select * from [UserProperty] where userid="+activity.id;
             PreparedStatement ps2 = con.prepareStatement(query2);
             ResultSet rs2 = ps2.executeQuery();
             int total=0;
@@ -117,7 +120,7 @@ Spinner spinnerprppertyname;
 
         }
         try {
-            String query = "select * from [UserPropertyCostTask]";
+            String query = "select * from [UserPropertyCostTask] where userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             int total = 0;
@@ -188,13 +191,27 @@ Spinner spinnerprppertyname;
         layouthomeownership.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 Fragment fragment = new HomeOwnershipFrag();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
+            }
+        });
+        layoutmaintanance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new MyTaskAllFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
+            }
+        });
+        layoutongoingproject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              /*  Fragment fragment = new HomeOwnershipFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();*/
 
             }
         });
@@ -235,7 +252,7 @@ Spinner spinnerprppertyname;
             @Override
             public void onClick(View view) {
 
-                Fragment frag = new CarWashFrag();
+                Fragment frag = new MyTaskPro();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.mainFrame, frag).commit();
@@ -247,7 +264,7 @@ Spinner spinnerprppertyname;
             @Override
             public void onClick(View view) {
 
-                Fragment frag = new CarWashFrag();
+                Fragment frag = new MyTaskPro();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.mainFrame, frag).commit();

@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.mainFrame, fragment).commit();
         }
         else if (id == R.id.notification) {
-            fragment = new CarWashFrag();
+            fragment = new MyTaskPro();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.mainFrame, fragment).commit();
@@ -461,7 +461,7 @@ public class MainActivity extends AppCompatActivity
             if(isSuccess) {
                 // Toast.makeText(MainActivity.this,r,Toast.LENGTH_LONG).show();
 
-                if(r.equals("Login Successfully")){
+                if(r.equals("Owner Login Successfully")){
                     if(active_status.equals("false")){
                         Toast.makeText(MainActivity.this,"Profile Deactivate",Toast.LENGTH_LONG).show();
                     }else{
@@ -475,6 +475,15 @@ public class MainActivity extends AppCompatActivity
                     }
 
 
+                }
+                else if(r.equals("Contractor Login Successfully")){
+                    navigationView.setVisibility(View.VISIBLE);
+                    loginlayout.setVisibility(View.GONE);
+
+                    Fragment fragment = new HomeContractor();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.mainFrame, fragment).commit();
                 }
             }else{
                 Toast.makeText(MainActivity.this,r,Toast.LENGTH_LONG).show();
@@ -504,6 +513,11 @@ public class MainActivity extends AppCompatActivity
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         rs.next();
+                        //Contractor
+                        String queryas = "select * from [Contractor] where [email]= '" + userid.toString() + "' and [password] = '"+ password.toString() +"'";
+                        PreparedStatement psas = con.prepareStatement(queryas);
+                        ResultSet rsas = psas.executeQuery();
+                        rsas.next();
                         if(rs.getRow()!=0){
                             try {
                                 id = rs.getString("id").trim();
@@ -514,7 +528,12 @@ public class MainActivity extends AppCompatActivity
                             } catch (Exception ex) {
                                 Log.d("ReminderService In", ex.getMessage() + "######");
                             }
-                            z = "Login Successfully";
+                            z = "Owner Login Successfully";
+                            isSuccess=true;
+                            con.close();
+                        }   else if(rsas.getRow()!=0){
+                            id = rsas.getString("id").trim();
+                            z = "Contractor Login Successfully";
                             isSuccess=true;
                             con.close();
                         }

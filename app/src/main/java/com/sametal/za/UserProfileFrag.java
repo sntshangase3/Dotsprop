@@ -128,7 +128,7 @@ FillDepartmentData();
             @Override
             public void onClick(View v) {
 
-                   // CreateProfile addPro = new CreateProfile();
+                   // CreateTask addPro = new CreateTask();
                    // addPro.execute("");
 
 
@@ -365,7 +365,7 @@ FillDepartmentData();
         return matcher.matches();
     }
     /*
-    public class CreateProfile extends AsyncTask<String, String, String> {
+    public class CreateTask extends AsyncTask<String, String, String> {
 
 
         String z = "";

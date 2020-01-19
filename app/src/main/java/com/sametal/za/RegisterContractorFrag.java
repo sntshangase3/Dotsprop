@@ -54,7 +54,7 @@ public class RegisterContractorFrag extends Fragment {
     Connection con;
     String un, pass, db, ip;
 
-    EditText edtcontactname, edtbusinessname,edtaddress,edtservice,  edtemail, edtcontactno,edtrelatedfield,edtnumberofserviceyears,edtnumberofemployees;
+    EditText edtcontactname, edtbusinessname,edtaddress,edtservice,  edtemail,edtpassword, edtcontactno,edtrelatedfield,edtnumberofserviceyears,edtnumberofemployees;
     ImageView edtprofileImage;
     Button btncreate, btnsave;
 
@@ -75,6 +75,7 @@ public class RegisterContractorFrag extends Fragment {
         spinnerservice = (Spinner) rootView.findViewById(R.id.spinnerservice);
         edtcontactno = (EditText) rootView.findViewById(R.id.edtcontact);
         edtemail = (EditText) rootView.findViewById(R.id.edtemail);
+        edtpassword = (EditText) rootView.findViewById(R.id.edtpassword);
         edtrelatedfield = (EditText) rootView.findViewById(R.id.edtrelatedfield);
 
         edtnumberofserviceyears = (EditText) rootView.findViewById(R.id.edtnumberofserviceyears);
@@ -408,7 +409,7 @@ FillServiceData();
         //==============Fill Data=
         try {
 
-                    String query = "select * from [Contractor] where [userid]=" + Integer.parseInt(activity.id);
+                    String query = "select * from [Contractor] where [id]=" + Integer.parseInt(activity.id);
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     rs.next();
@@ -419,6 +420,7 @@ FillServiceData();
                         edtcontactname.setText(rs.getString("contactname"));
                         edtbusinessname.setText(rs.getString("businessname"));
                         edtemail.setText(rs.getString("email"));
+                        edtpassword.setText(rs.getString("password"));
                         edtcontactno.setText(rs.getString("contact"));
                         edtaddress.setText(rs.getString("address"));
 
@@ -472,6 +474,7 @@ FillServiceData();
         String province = spinnerprovince.getSelectedItem().toString();
         String address = edtaddress.getText().toString();
         String email = edtemail.getText().toString();
+        String password = edtpassword.getText().toString();
 
 
         String numberofyears = edtnumberofserviceyears.getText().toString();
@@ -526,10 +529,10 @@ FillServiceData();
                 } else {
                     edtaddress.setBackground(bg);
                 }
-                if ((edtemail.getText().toString().trim().equals(""))) {
-                    edtemail.setBackground(errorbg);
+                if ((edtpassword.getText().toString().trim().equals(""))) {
+                    edtpassword.setBackground(errorbg);
                 } else {
-                    edtemail.setBackground(bg);
+                    edtpassword.setBackground(bg);
                 }
 
                 if ((edtemail.getText().toString().trim().equals("")) ||!emailValidator(edtemail.getText().toString())) {
@@ -572,7 +575,7 @@ FillServiceData();
 
         @Override
         protected String doInBackground(String... params) {
-            if (contacttname.trim().equals("")|| businessname.trim().equals("")|| province.trim().equals("")||email.trim().equals("")||contact.trim().equals("")|| service.trim().equals("")|| numberofemployees.trim().equals("") || numberofyears.trim().equals("") || relatedfield.trim().equals("") )
+            if (contacttname.trim().equals("")|| businessname.trim().equals("")|| province.trim().equals("")||email.trim().equals("")||password.trim().equals("")||contact.trim().equals("")|| service.trim().equals("")|| numberofemployees.trim().equals("") || numberofyears.trim().equals("") || relatedfield.trim().equals("") )
                 z = "Please fill in all required details...";
             else {
                 try {
@@ -596,7 +599,7 @@ FillServiceData();
 
 
                                     String query = "insert into [Contractor]([contactname],[businessname],[province],[address],[email],[contact],[service],[numberofserviceyears],[numberofemployees],[relatedfield],[image],[userid]) " +
-                                            "values ('" + contacttname + "','" + businessname + "','" + province + "','" + address + "','" + email + "','" + contact + "','" + service + "','" +numberofyears + "','" + numberofemployees + "','" + relatedfield + "','" + encodedImage + "','" + activity.id + "')";
+                                            "values ('" + contacttname + "','" + businessname + "','" + province + "','" + address + "','" + email + "','" + password + "','" + contact + "','" + service + "','" +numberofyears + "','" + numberofemployees + "','" + relatedfield + "','" + encodedImage + "')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                     z = "Profile Created";
@@ -636,6 +639,7 @@ FillServiceData();
         String province = spinnerprovince.getSelectedItem().toString();
         String address = edtaddress.getText().toString();
         String email = edtemail.getText().toString();
+        String password = edtemail.getText().toString();
 
 
         String numberofyears = edtnumberofserviceyears.getText().toString();
@@ -683,10 +687,11 @@ FillServiceData();
                 } else {
                     edtaddress.setBackground(bg);
                 }
-                if ((edtemail.getText().toString().trim().equals(""))) {
-                    edtemail.setBackground(errorbg);
+
+                if ((edtpassword.getText().toString().trim().equals(""))) {
+                    edtpassword.setBackground(errorbg);
                 } else {
-                    edtemail.setBackground(bg);
+                    edtpassword.setBackground(bg);
                 }
 
                 if ((edtemail.getText().toString().trim().equals("")) ||!emailValidator(edtemail.getText().toString())) {
@@ -727,12 +732,12 @@ FillServiceData();
 
         @Override
         protected String doInBackground(String... params) {
-            if (contacttname.trim().equals("")|| businessname.trim().equals("")|| province.trim().equals("")||email.trim().equals("")||contact.trim().equals("")|| service.trim().equals("")|| numberofemployees.trim().equals("") || numberofyears.trim().equals("") || relatedfield.trim().equals("") )
+            if (contacttname.trim().equals("")|| businessname.trim().equals("")|| province.trim().equals("")||email.trim().equals("")||password.trim().equals("")||contact.trim().equals("")|| service.trim().equals("")|| numberofemployees.trim().equals("") || numberofyears.trim().equals("") || relatedfield.trim().equals("") )
                 z = "Please fill in all details...";
             else {
                 try {
 
-                    String query = "update [Contractor] set [contactname]='" + contacttname + "',[businessname]='" + businessname + "',[province]='" + province + "',[address]='" + address + "',[email]='" + email + "',[contact]='" + contact + "',[service]='" + service + "',[numberofserviceyears]='" +numberofyears + "',[numberofemployees]='" + numberofemployees + "',[relatedfield]='" + relatedfield + "',[image]='" + encodedImage + "' where [userid]='" + activity.id + "'";
+                    String query = "update [Contractor] set [contactname]='" + contacttname + "',[businessname]='" + businessname + "',[province]='" + province + "',[address]='" + address + "',[email]='" + email + "',[password]='" + password + "',[contact]='" + contact + "',[service]='" + service + "',[numberofserviceyears]='" +numberofyears + "',[numberofemployees]='" + numberofemployees + "',[relatedfield]='" + relatedfield + "',[image]='" + encodedImage + "' where [userid]='" + activity.id + "'";
                     PreparedStatement preparedStatement = con.prepareStatement(query);
                             preparedStatement.executeUpdate();
                             z = "Updated Successfully";

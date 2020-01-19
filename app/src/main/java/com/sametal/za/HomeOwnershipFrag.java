@@ -1,14 +1,23 @@
 package com.sametal.za;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +32,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -49,8 +61,9 @@ public class HomeOwnershipFrag extends Fragment {
     ImageView setting11, setting12, setting13, setting21, setting22, setting23, setting31, setting32, setting33, setting34;
     ArrayList<String> taskname = new ArrayList<String>();
     ArrayList<String> price = new ArrayList<String>();
-
-
+    ImageView edtprofileImage;
+    byte[] byteArray;
+    String encodedImage;
     Button btncreate, btnsave;
     MainActivity activity = MainActivity.instance;
     ListView lstgross11, lstgross12, lstgross13, lstgross21, lstgross22, lstgross23, lstgross31, lstgross32, lstgross33, lstgross34;
@@ -60,7 +73,7 @@ public class HomeOwnershipFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.homeownership, container, false);
-
+        edtprofileImage = (ImageView) rootView.findViewById(R.id.propertyprofileImage);
         lstgross11 = (ListView) rootView.findViewById(R.id.lstgross11);
         lstgross12 = (ListView) rootView.findViewById(R.id.lstgross12);
         lstgross13 = (ListView) rootView.findViewById(R.id.lstgross13);
@@ -128,7 +141,7 @@ public class HomeOwnershipFrag extends Fragment {
         FillServiceData();
         FillCategoryData();
         try {
-            String query = "select * from [UserPropertyCostTask]";
+            String query = "select * from [UserPropertyCostTask] where userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             int total = 0;
@@ -142,7 +155,7 @@ public class HomeOwnershipFrag extends Fragment {
         }
         //Property Cost Total
         try {
-            String query = "select * from [UserPropertyCostTask] where propertycostcategoryid in(1,2,3)";
+            String query = "select * from [UserPropertyCostTask] where propertycostcategoryid in(1,2,3) and userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             int total = 0;
@@ -156,7 +169,7 @@ public class HomeOwnershipFrag extends Fragment {
         }
         //Municipality cost total
         try {
-            String query = "select * from [UserPropertyCostTask] where propertycostcategoryid in(4,5,6)";
+            String query = "select * from [UserPropertyCostTask] where propertycostcategoryid in(4,5,6) and userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             int total = 0;
@@ -170,7 +183,7 @@ public class HomeOwnershipFrag extends Fragment {
         }
         //Maintanance cost Total
         try {
-            String query = "select * from [UserPropertyCostTask] where propertycostcategoryid in(7,8,9,10)";
+            String query = "select * from [UserPropertyCostTask] where propertycostcategoryid in(7,8,9,10)  and userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             int total = 0;
@@ -182,19 +195,7 @@ public class HomeOwnershipFrag extends Fragment {
         } catch (Exception ex) {
             Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
         }
-        try {
-            String query = "select * from [UserPropertyCostTask] where propertycostcategoryid in(7,8,9,10)";
-            PreparedStatement ps = con.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            int total = 0;
-            while (rs.next()) {
-                total = total + Integer.parseInt(rs.getString("cost"));
-            }
-            txtmaintancecost.setText("Maintanance Cost R" + String.valueOf(total));
 
-        } catch (Exception ex) {
-            Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
-        }
         FillData1();
         FillData2();
         FillData3();
@@ -260,11 +261,22 @@ public class HomeOwnershipFrag extends Fragment {
                     UpdateProfile updatePro = new UpdateProfile();
                     updatePro.execute("");
                 } else {
-                    CreateProfile addPro = new CreateProfile();
+
+
+                    CreateTask addPro = new CreateTask();
                     addPro.execute("");
+
+
                 }
 
 
+            }
+        });
+        edtprofileImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                selectImage();
             }
         });
         setting11.setOnClickListener(new View.OnClickListener() {
@@ -439,6 +451,7 @@ public class HomeOwnershipFrag extends Fragment {
                 FillData10();
             }
         });
+
         return rootView;
     }
 
@@ -488,7 +501,187 @@ public class HomeOwnershipFrag extends Fragment {
         }
 //==========
     }
+    private void selectImage() {
 
+
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(rootView.getContext());
+
+        builder.setTitle("Add Photo!");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+
+            @Override
+
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals("Take Photo"))
+
+                {
+
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    File f = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
+
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+
+                    startActivityForResult(intent, 1);
+
+                } else if (options[item].equals("Choose from Gallery"))
+
+                {
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                    startActivityForResult(intent, 2);
+
+
+                } else if (options[item].equals("Cancel")) {
+
+                    dialog.dismiss();
+
+                }
+
+            }
+
+        });
+
+        builder.show();
+
+    }
+    @Override
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+
+            if (requestCode == 1) {
+
+                File f = new File(Environment.getExternalStorageDirectory().toString());
+
+                for (File temp : f.listFiles()) {
+
+                    if (temp.getName().equals("temp.jpg")) {
+
+                        f = temp;
+
+                        break;
+
+                    }
+
+                }
+
+                try {
+
+                    Bitmap bitmap;
+
+                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+
+
+                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+
+                    try {
+                        ExifInterface ei = new ExifInterface(f.getAbsolutePath());
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                        switch (orientation) {
+
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                bitmap = rotateImage(bitmap, 90);
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                bitmap = rotateImage(bitmap, 90);
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                bitmap = rotateImage(bitmap, 270);
+
+                        }
+
+                    } catch (IOException io) {
+
+                    }
+
+
+                    try {
+                        edtprofileImage.setImageBitmap(bitmap);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byteArray = stream.toByteArray();
+                        encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                    }
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+
+                }
+
+            } else if (requestCode == 2) {
+
+                Uri selectedImage = data.getData();
+
+                String[] filePath = {MediaStore.Images.Media.DATA};
+
+                Cursor c = rootView.getContext().getApplicationContext().getContentResolver().query(selectedImage, filePath, null, null, null);
+
+                c.moveToFirst();
+
+                int columnIndex = c.getColumnIndex(filePath[0]);
+
+                String picturePath = c.getString(columnIndex);
+
+                c.close();
+
+
+                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+                thumbnail = Bitmap.createScaledBitmap(thumbnail, 100, 100, true);
+                try {
+                    ExifInterface ei = new ExifInterface(picturePath);
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            thumbnail = rotateImage(thumbnail, 90);
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            thumbnail = rotateImage(thumbnail, 90);
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            thumbnail = rotateImage(thumbnail, 270);
+
+
+                    }
+
+                } catch (IOException io) {
+
+                }
+
+
+                edtprofileImage.setImageBitmap(thumbnail);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byteArray = stream.toByteArray();
+                encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            }
+
+        }
+
+    }
+
+    //======
+    private static Bitmap rotateImage(Bitmap img, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        //Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        return rotatedImg;
+    }
 
     public void FillData1() {
         //==============Fill Data=
@@ -496,7 +689,7 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=1";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=1";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -525,9 +718,10 @@ public class HomeOwnershipFrag extends Fragment {
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -543,6 +737,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -581,7 +779,7 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=2";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=2";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -610,9 +808,10 @@ public class HomeOwnershipFrag extends Fragment {
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -628,6 +827,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -666,7 +869,7 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=3";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=3";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -695,9 +898,10 @@ public class HomeOwnershipFrag extends Fragment {
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -713,6 +917,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -751,7 +959,7 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=4";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=4";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -780,9 +988,10 @@ public class HomeOwnershipFrag extends Fragment {
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -798,6 +1007,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -836,7 +1049,7 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=5";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=5";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -865,9 +1078,10 @@ public class HomeOwnershipFrag extends Fragment {
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -883,6 +1097,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -921,13 +1139,13 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=6";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=6";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             taskname.clear();
             price.clear();
-
+            Log.d("ReminderService In", query);
             int total=0;
             while (rs.next()) {
 
@@ -949,10 +1167,12 @@ public class HomeOwnershipFrag extends Fragment {
                     try {
 
                         final String serviceid = taskname.get(position);
+                        Log.d("ReminderService In", serviceid);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -968,6 +1188,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -1006,7 +1230,7 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=7";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=7";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -1033,10 +1257,12 @@ public class HomeOwnershipFrag extends Fragment {
 
                     try {
 
-                        final String task = taskname.get(position);
-                        String query = "select * from [UserPropertyCostTask] upct\n" +
+                        final String serviceid = taskname.get(position);
+                        final String cost = price.get(position).replace("R", "");
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where task=" + task;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -1052,6 +1278,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -1089,8 +1319,8 @@ public class HomeOwnershipFrag extends Fragment {
         try {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
-                    "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=8";
+                    " inner join [Service] s on s.ID=upct.serviceid \n" +
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=8";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -1119,9 +1349,10 @@ public class HomeOwnershipFrag extends Fragment {
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -1137,6 +1368,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -1174,14 +1409,14 @@ public class HomeOwnershipFrag extends Fragment {
         try {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
-                    "inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=9";
+                    " inner join [Service] s on s.ID=upct.serviceid \n" +
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=9";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             taskname.clear();
             price.clear();
-            Log.d("ReminderService In", "@@@@ " + rs.getRow());
+            Log.d("ReminderService In", "@@@@ " + rs.getRow()+query);
 
             int total=0;
             while (rs.next()) {
@@ -1207,9 +1442,10 @@ public class HomeOwnershipFrag extends Fragment {
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
-                                " where serviceid=" + serviceid + " and cost=" + cost;
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
+                                " where service='" + serviceid + "' and cost='" + cost+"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In", query);
@@ -1225,6 +1461,10 @@ public class HomeOwnershipFrag extends Fragment {
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -1263,20 +1503,20 @@ public class HomeOwnershipFrag extends Fragment {
 
             String query = "select cost,upct.id as upct_id,service  from [UserPropertyCostTask] upct\n" +
                     " inner join [Service] s on s.ID=upct.serviceid \n" +
-                    " where propertycostcategoryid=10";
+                    " where userid='"+Integer.parseInt(activity.id)+"' and propertycostcategoryid=10";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             taskname.clear();
             price.clear();
-int total=0;
+            int total=0;
             while (rs.next()) {
 
                 taskname.add(rs.getString("service").toString().trim());
                 price.add("R" + rs.getString("cost").toString().trim());
-total =total+Integer.parseInt(rs.getString("cost").toString().trim());
+                total =total+Integer.parseInt(rs.getString("cost").toString().trim());
             }
-txttotalhomerepair.setText("R"+String.valueOf(total));
+            txttotalhomerepair.setText("R"+String.valueOf(total));
             AddTaskAdapter adapter = new AddTaskAdapter(this.getActivity(), taskname, price);
             lstgross34.setAdapter(adapter);
             lstgross34.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1290,8 +1530,9 @@ txttotalhomerepair.setText("R"+String.valueOf(total));
 
                         final String serviceid = taskname.get(position);
                         final String cost = price.get(position).replace("R", "");
-                        String query = "select cost,upct.id as upct_id,s.id as s_id from [UserPropertyCostTask] upct\n" +
+                        String query = "select cost,upct.id as upct_id,s.id as s_id,image from [UserPropertyCostTask] upct\n" +
                                 "  inner join [Service] s on s.ID=upct.serviceid\n" +
+                                " inner join [UserPropertyCostTaskPhotos] p on p.taskid=upct.id"+
                                 " where service='" + serviceid + "' and cost='" + cost + "'";
                         Log.d("ReminderService In", query);
                         PreparedStatement ps = con.prepareStatement(query);
@@ -1309,6 +1550,11 @@ txttotalhomerepair.setText("R"+String.valueOf(total));
                                 taskid = rs.getInt("upct_id");
                                 edttaskprice.setText(rs.getString("cost").trim());
                                 spinnerservice.setSelection(rs.getInt("s_id"));
+
+                                byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                                edtprofileImage.setImageBitmap(decodebitmap);
+                                encodedImage = rs.getString("image");
 
                             } catch (Exception ex) {
                                 // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here1",Toast.LENGTH_LONG).show();
@@ -1354,7 +1600,7 @@ txttotalhomerepair.setText("R"+String.valueOf(total));
     }
 
 
-    public class CreateProfile extends AsyncTask<String, String, String> {
+    public class CreateTask extends AsyncTask<String, String, String> {
 
 
         String z = "";
@@ -1400,15 +1646,27 @@ txttotalhomerepair.setText("R"+String.valueOf(total));
 
         @Override
         protected String doInBackground(String... params) {
-            if (price.trim().equals(""))
-                z = "Please fill in all required details...";
+            if (price.trim().equals("")||encodedImage.trim().equals(""))
+                z = "Please fill in photo & all required details...";
             else {
                 try {
 
 
-                    String query = "insert into [UserPropertyCostTask]([cost],[serviceid],[propertycostcategoryid]) " +
-                            "values ('" + price + "','" + service + "','" + category + "')";
+                    String query = "insert into [UserPropertyCostTask]([cost],[serviceid],[propertycostcategoryid],[userid]) " +
+                            "values ('" + price + "','" + service + "','" + category + "','" + Integer.parseInt(activity.id) + "')";
                     PreparedStatement preparedStatement = con.prepareStatement(query);
+                    preparedStatement.executeUpdate();
+                    String query1 = "select MAX([id]) as id  from [UserPropertyCostTask])";
+                    PreparedStatement ps = con.prepareStatement(query1);
+                    ResultSet rs = ps.executeQuery();
+                    rs.next();
+                    int id=0;
+                    if(rs.getRow()!=0){
+                        id=rs.getInt("id");
+                    }
+                    query = "insert into [[UserPropertyCostTaskPhotos]]([image],[taskid]) " +
+                            "values ('" + encodedImage + "','" + id + "')";
+                    preparedStatement = con.prepareStatement(query);
                     preparedStatement.executeUpdate();
                     z = "Task Created!!!";
                     isSuccess = true;

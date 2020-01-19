@@ -15,7 +15,7 @@
         android:icon="@drawable/notification"
         android:title="Notification Centre" />
     <item
-        android:id="@+id/property"
+        android:id="@+id/ownership"
         android:icon="@drawable/home"
         android:title="Homeownership" />
     <item
@@ -23,7 +23,7 @@
         android:icon="@drawable/maintanance"
         android:title="Maintanance Schedules" />
     <item
-        android:id="@+id/vehicle"
+        android:id="@+id/ongoing"
         android:icon="@drawable/ongoingproject"
         android:title="On-Going Projects" />
     <item

@@ -4,8 +4,8 @@
     <item android:state_focused="true" android:drawable="@color/colorAvoca"/>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark"/>
-            <stroke android:color="#DEB887" android:width="4dp" />
+            <solid android:color="@color/colorPrimary"/>
+            <stroke android:color="@color/colorPrimaryBackGround" android:width="4dp" />
             <!--corners allow us to make the rounded corners button-->
             <corners android:radius="20dp" />
         </shape>
