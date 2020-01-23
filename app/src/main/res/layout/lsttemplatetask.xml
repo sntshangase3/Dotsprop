@@ -24,13 +24,10 @@ android:id="@+id/lsttemplatengo"
         >
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:scaleType="fitXY"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:id="@+id/lbllogoimage"
 
-android:layout_weight="1"
-            android:layout_margin="2dp"
             />
         <TextView
             android:layout_width="0dp"
@@ -46,7 +43,6 @@ android:layout_weight="1"
             />
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/lbldescribtion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

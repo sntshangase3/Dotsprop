@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         else if (id == R.id.schedule) {
-            fragment = new BookingRequestFrag();
+            fragment = new MyTaskAllFrag();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.mainFrame, fragment).commit();

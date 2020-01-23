@@ -3,19 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusable="true"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:clickable="true"
-    android:background="?android:attr/selectableItemBackground"
+    android:id="@+id/relativeorder"
     android:orientation="vertical">
 
     <ImageView
         android:layout_width="70dp"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:visibility="invisible"
+        android:src="@drawable/profil"
         android:id="@+id/lblproimage"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -47,6 +46,15 @@
         android:layout_height="wrap_content"
         android:text="10 Counts:"
         android:textColor="@color/colorPrimaryDark"
+        android:layout_toEndOf="@+id/lblproimage" />
+    <TextView
+        android:id="@+id/lblstatus"
+        android:layout_below="@id/lbldec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Completed"
+        android:textStyle="italic"
+        android:textColor="@color/colorAvoca"
         android:layout_toEndOf="@+id/lblproimage" />
 
 

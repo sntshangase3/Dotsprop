@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+android:scaleType="centerCrop"
+    android:id="@+id/homepage"
+    android:background="@color/colorPrimaryBackGround"
+
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:textSize="20dp"
+         android:text="Get Pro's Help"
+            android:layout_marginTop="2dp"
+            android:layout_margin="2dp"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txttasktype"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="2dp"
+            android:layout_margin="2dp"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtdesc"
+            android:layout_marginTop="2dp"
+            android:layout_margin="2dp"
+            />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        >
+
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+          android:src="@drawable/calender"
+            android:textColor="#303F9F"
+
+            android:layout_margin="2dp"
+            android:layout_marginTop="1dp"
+            android:id="@+id/btn_start"
+            android:text="Start Date" />
+
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+          android:src="@drawable/calender"
+            android:textColor="#303F9F"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginRight="40dp"
+            android:id="@+id/btn_end"
+            android:layout_margin="2dp"
+            android:layout_marginTop="1dp"
+
+            android:text="End Date" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+
+        >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:layout_marginTop="1dp"
+            android:id="@+id/txt_start"
+            android:text="Start Date?" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+
+            android:id="@+id/txt_end"
+            android:layout_margin="2dp"
+            android:layout_marginTop="1dp"
+
+            android:text="End Date?" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        >
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="30sp"
+
+            android:text="Send"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/btn_send"
+            android:background="@drawable/button_bground"
+            />
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

@@ -63,13 +63,14 @@ public class HomeOwnershipFrag extends Fragment {
     ArrayList<String> price = new ArrayList<String>();
     ImageView edtprofileImage;
     byte[] byteArray;
-    String encodedImage;
+    String encodedImage="";
     Button btncreate, btnsave;
     MainActivity activity = MainActivity.instance;
     ListView lstgross11, lstgross12, lstgross13, lstgross21, lstgross22, lstgross23, lstgross31, lstgross32, lstgross33, lstgross34;
     Spinner spinnerservice, spinnercategory;
     ArrayAdapter adapter;
-
+    Bundle bundle;
+    Bundle bundles = new Bundle();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.homeownership, container, false);
@@ -136,6 +137,7 @@ public class HomeOwnershipFrag extends Fragment {
             Log.d("ReminderService In", ex.getMessage() + "DSDSD");
         }
 
+        bundle = this.getArguments();
 
 
         FillServiceData();
@@ -206,6 +208,7 @@ public class HomeOwnershipFrag extends Fragment {
         FillData8();
         FillData9();
         FillData10();
+
         spinnercategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -1608,7 +1611,7 @@ public class HomeOwnershipFrag extends Fragment {
 
 
         String price = edttaskprice.getText().toString();
-        int service = spinnerservice.getSelectedItemPosition() + 1;
+        int service = spinnerservice.getSelectedItemPosition();
         int category = spinnercategory.getSelectedItemPosition() + 1;
 
 
@@ -1646,25 +1649,25 @@ public class HomeOwnershipFrag extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            if (price.trim().equals("")||encodedImage.trim().equals(""))
+            if (price.trim().equals("")/*||encodedImage.trim().equals("")*/)
                 z = "Please fill in photo & all required details...";
             else {
                 try {
 
 
-                    String query = "insert into [UserPropertyCostTask]([cost],[serviceid],[propertycostcategoryid],[userid]) " +
-                            "values ('" + price + "','" + service + "','" + category + "','" + Integer.parseInt(activity.id) + "')";
+                    String query = "insert into [UserPropertyCostTask]([cost],[serviceid],[propertycostcategoryid],[userid],[status]) " +
+                            "values ('" + price + "','" + service + "','" + category + "','" + Integer.parseInt(activity.id) + "','New')";
                     PreparedStatement preparedStatement = con.prepareStatement(query);
                     preparedStatement.executeUpdate();
-                    String query1 = "select MAX([id]) as id  from [UserPropertyCostTask])";
+                    String query1 = "select MAX(id) as new_id from [UserPropertyCostTask]";
                     PreparedStatement ps = con.prepareStatement(query1);
                     ResultSet rs = ps.executeQuery();
                     rs.next();
                     int id=0;
                     if(rs.getRow()!=0){
-                        id=rs.getInt("id");
+                        id=rs.getInt("new_id");
                     }
-                    query = "insert into [[UserPropertyCostTaskPhotos]]([image],[taskid]) " +
+                    query = "insert into [UserPropertyCostTaskPhotos]([image],[taskid]) " +
                             "values ('" + encodedImage + "','" + id + "')";
                     preparedStatement = con.prepareStatement(query);
                     preparedStatement.executeUpdate();
@@ -1740,6 +1743,10 @@ public class HomeOwnershipFrag extends Fragment {
                     String query = "Update [UserPropertyCostTask] set [cost]='" + price + "',[serviceid]='" + service + "',[propertycostcategoryid]='" + category + "' where [id]='" + taskid + "'";
                     ;
                     PreparedStatement preparedStatement = con.prepareStatement(query);
+                    preparedStatement.executeUpdate();
+
+                    query = "update [UserPropertyCostTaskPhotos] set [image]='"+encodedImage+"' where [taskid]='" + taskid + "'";
+                    preparedStatement = con.prepareStatement(query);
                     preparedStatement.executeUpdate();
                     z = "Updated Successfully";
                     isSuccess = true;

@@ -1,7 +1,9 @@
 package com.sametal.za;
 
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.TimePickerDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -14,15 +16,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+
+import static com.sametal.za.BookingRequestFrag.DATE_TIME_FORMAT;
 
 /**
  * Created by Sbusiso.
@@ -35,11 +42,15 @@ public class HomeContractor extends Fragment {
     View rootView;
     Bundle bundle;
     MainActivity activity =   MainActivity.instance;
+    FragmentManager fragmentManager;
 
+
+
+    Calendar date;
     //---------con--------
     Connection con;
-    String un,pass,db,ip, bookingdaydate, selectedpro;
-
+    String un,pass,db,ip;
+String selectedproid="";
     public HomeContractor(){
 
         super();
@@ -63,7 +74,7 @@ public class HomeContractor extends Fragment {
         txttprovince = (TextView) rootView.findViewById(R.id.txttprovince);
 
         profilePic = (ImageView) rootView.findViewById(R.id.profilePic);
-
+        fragmentManager = getFragmentManager();
         // Declaring Server ip, username, database name and password
         ip = "winsqls01.cpt.wa.co.za";
         db = "Dotsprop";
@@ -77,25 +88,33 @@ public class HomeContractor extends Fragment {
             Toast.makeText(rootView.getContext(), "Check your network connection!!",Toast.LENGTH_LONG).show();
         }
         bundle = this.getArguments();
+
+        try {
+            if (bundle != null) {
+
+                if (!bundle.getString("selectedproid").toString().equals("")) {
+                    selectedproid=bundle.getString("selectedproid");
+                }
+            }
+        } catch (Exception ex) {
+
+        }
         FillData();
         btnBook.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
-
-                if (true) {
-                   // edtaddress.setBackground(errorbg);
-                } else if (bookingdaydate.equals("")) {
-                    Toast.makeText(rootView.getContext(), "Select Delivery Day!!", Toast.LENGTH_LONG).show();
-                } else {
+                HomeContractor_Help fragment = new HomeContractor_Help();
+                fragment.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
                     try {
 
 
-                        Date today = new Date();
+                     /*   Date today = new Date();
                         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
                         String todaydate = date_format.format(today);
                         String refno = "SITS" + today.getHours() + "" + today.getMinutes() + "" + today.getSeconds();
-                       /* if (todaydate.trim().equals("")|| bookingdaydate.trim().equals("")|| edtdistance.getText().toString().equals("")|| edtaddress.getText().toString().equals("")|| selectedpro.trim().equals("") )
+
+                        if (todaydate.trim().equals("")|| bookingdaydate.trim().equals("")|| edtdistance.getText().toString().equals("")|| edtaddress.getText().toString().equals("")|| selectedpro.trim().equals("") )
                         {
                             Toast ToastMessage = Toast.makeText(rootView.getContext(), "Please fill in all required details...", Toast.LENGTH_LONG);
                             View toastView = ToastMessage.getView();
@@ -127,7 +146,7 @@ public class HomeContractor extends Fragment {
                         Log.d("ReminderService In", ex.getMessage().toString());
                     }
 
-                }
+
 
             }
         });
@@ -147,7 +166,13 @@ public class HomeContractor extends Fragment {
         //==============Fill Data=
         try {
 
-            String query = "select * from [Contractor] where [id]=" + Integer.parseInt(activity.id);
+            String query="";
+            if(!selectedproid.equals("")){
+                query = "select * from [Contractor] where [id]=" + Integer.parseInt(selectedproid);
+            }else{
+                query = "select * from [Contractor] where [id]=" + Integer.parseInt(activity.id);
+                selectedproid=activity.id;
+            }
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             rs.next();
@@ -158,8 +183,16 @@ public class HomeContractor extends Fragment {
                 txtcontactname.setText(rs.getString("contactname"));
                 txtbusinessname.setText(rs.getString("businessname"));
                 txttotalyears.setText(rs.getString("numberofserviceyears")+" Years");
-
                 txttotalemployees.setText(rs.getString("numberofemployees")+" Employees");
+
+                String query1 = "select count(controctorid) as request from UserPropertyCostTask\n" +
+                        "where controctorid=" + selectedproid;
+                PreparedStatement ps1 = con.prepareStatement(query1);
+                ResultSet rs1 = ps1.executeQuery();
+                rs1.next();
+               String requestno= rs1.getString("request").toString();
+               txttotalrequest.setText(requestno);
+
                 txttprovince.setText(rs.getString("province"));
                  if (rs.getString("image") != null) {
                     byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
@@ -179,7 +212,7 @@ public class HomeContractor extends Fragment {
             }
 
         } catch (Exception ex) {
-            // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here",Toast.LENGTH_LONG).show();
+            Log.d("ReminderService In", ex.getMessage().toString());
         }
 //==========
     }

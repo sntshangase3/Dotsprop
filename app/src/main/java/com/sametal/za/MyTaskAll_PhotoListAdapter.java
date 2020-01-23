@@ -44,10 +44,7 @@ public class MyTaskAll_PhotoListAdapter extends ArrayAdapter<String> {
         View rootView = inflater.inflate(R.layout.lsttemplateorderpointbundle, null, true);
 
 
-        TextView name,qty,pro;
-
-
-        name = (TextView) rootView.findViewById(R.id.lblname);
+        TextView name = (TextView) rootView.findViewById(R.id.lblname);
 
 
         try {
@@ -59,7 +56,6 @@ public class MyTaskAll_PhotoListAdapter extends ArrayAdapter<String> {
             Bitmap back=itemimage.get(position);
 
             Drawable profile =new BitmapDrawable(rootView.getContext().getResources(),back);
-
 
           rootView.setBackground(profile);
 

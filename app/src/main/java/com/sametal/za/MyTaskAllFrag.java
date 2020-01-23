@@ -1,10 +1,13 @@
 package com.sametal.za;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -29,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Created by sibusison on 2017/07/30.
  */
-public class MyTaskAllFrag extends Fragment {
+public class MyTaskAllFrag extends Fragment implements AdapterView.OnItemSelectedListener {
 
     View rootView;
 
@@ -38,21 +41,23 @@ public class MyTaskAllFrag extends Fragment {
     String un, pass, db, ip;
 
 
-    ImageView setting;
-    Button btn_detail, btn_photo;
+    ImageView setting,imgpro;
+    Button btn_detail, btn_photo,btn_complete,btn_incomplete,btn_new;
 
     MainActivity activity = MainActivity.instance;
     byte[] byteArray;
     String service = "";
     ListView lstgross;
+    ListView lstgross1;
     Spinner spinnerservice;
     ArrayAdapter adapter;
-    TextView txtback, txtdate;
+    TextView txtback, txtpro;
     Bundle bundles = new Bundle();
     FragmentManager fragmentManager;
 
     ArrayList<String> item_taskvalue = new ArrayList<String>();
     ArrayList<String> item_dec = new ArrayList<String>();
+    ArrayList<String> item_status = new ArrayList<String>();
     ArrayList<Integer> item_taskid = new ArrayList<Integer>();
 
     ArrayList<String> item_task = new ArrayList<String>();
@@ -63,11 +68,17 @@ public class MyTaskAllFrag extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.mytaskall_detail, container, false);
         lstgross = (ListView) rootView.findViewById(R.id.lstgross);
+        lstgross1 = (ListView) rootView.findViewById(R.id.lstgross1);
         spinnerservice = (Spinner) rootView.findViewById(R.id.spinnerservice);
         txtback = (TextView) rootView.findViewById(R.id.txtback);
+        txtpro = (TextView) rootView.findViewById(R.id.txtpro);
         btn_detail = (Button) rootView.findViewById(R.id.btn_detail);
         btn_photo = (Button) rootView.findViewById(R.id.btn_photo);
+        btn_complete = (Button) rootView.findViewById(R.id.btn_complete);
+        btn_incomplete = (Button) rootView.findViewById(R.id.btn_incomplete);
+        btn_new = (Button) rootView.findViewById(R.id.btn_new);
         setting = (ImageView) rootView.findViewById(R.id.setting);
+        imgpro = (ImageView) rootView.findViewById(R.id.imgpro);
 
         fragmentManager = getFragmentManager();
         // Declaring Server ip, username, database name and password
@@ -84,9 +95,9 @@ public class MyTaskAllFrag extends Fragment {
 
 
         Bundle bundle = this.getArguments();
+        FillServiceData();
 
-
-        txtback.setOnClickListener(new View.OnClickListener() {
+        imgpro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -95,10 +106,17 @@ public class MyTaskAllFrag extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.mainFrame, fragment).commit();*/
-                MyTaskPro fragment = new MyTaskPro();
-                bundles.putStringArrayList("item_taskall",item_taskall);
-                fragment.setArguments(bundles);
-                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+                if (!spinnerservice.getSelectedItem().toString().equals("Select Service")) {
+                    MyTaskPro fragment = new MyTaskPro();
+                    bundles.putStringArrayList("item_taskall",item_taskall);
+
+                    fragment.setArguments(bundles);
+                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+                }else{
+                    Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
+                        spinnerservice.setBackground(errorbg);
+                }
+
 
 
             }
@@ -107,8 +125,11 @@ public class MyTaskAllFrag extends Fragment {
         btn_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // spinnerservice.setSelection(0);
+                spinnerservice.performClick();
+               service = spinnerservice.getSelectedItem().toString() ;
+                FillData(service);
 
-spinnerservice.performClick();
             }
         });
 
@@ -122,7 +143,8 @@ FillDataPhotos();
         });
 
 
-        FillServiceData();
+
+
         spinnerservice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -133,10 +155,15 @@ FillDataPhotos();
                     try {
                         service = spinnerservice.getSelectedItem().toString() ;
                         FillData(service);
+                        spinnerservice.setBackgroundColor(Color.WHITE);
 
                     } catch (Exception ex) {
                         Log.d("ReminderService In", ex.getMessage().toString());
                     }
+                }else{
+                    spinnerservice.setSelection(0);
+                    service = spinnerservice.getSelectedItem().toString() ;
+                    FillData(service);
                 }
             }
 
@@ -146,9 +173,84 @@ FillDataPhotos();
 
             }
         });
+
+
+        btn_complete.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                try {
+
+                    for (int i : item_taskid) {
+                        String commands = "update [UserPropertyCostTask] set [status]='Completed' where [id]='" + i + "'";
+                        PreparedStatement preStmt = con.prepareStatement(commands);
+                        preStmt.executeUpdate();
+                    }
+                    Toast ToastMessage = Toast.makeText(rootView.getContext(),"Task Completed!!!", Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_bground);
+                    ToastMessage.show();
+                    MyTaskAllFrag fragment = new MyTaskAllFrag();
+                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
+            }
+        });
+        btn_incomplete.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                try {
+
+                    for (int i : item_taskid) {
+                        String commands = "update [UserPropertyCostTask] set [status]='Incomplete' where [id]='" + i + "'";
+                        PreparedStatement preStmt = con.prepareStatement(commands);
+                        preStmt.executeUpdate();
+                    }
+                    Toast ToastMessage = Toast.makeText(rootView.getContext(),"Task Incompleted!!!", Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_bground);
+                    ToastMessage.show();
+                    MyTaskAllFrag fragment = new MyTaskAllFrag();
+                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
+            }
+        });
+        btn_new.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                try {
+
+                    for (int i : item_taskid) {
+                        String commands = "update [UserPropertyCostTask] set [status]='New' where [id]='" + i + "'";
+                        PreparedStatement preStmt = con.prepareStatement(commands);
+                        preStmt.executeUpdate();
+                    }
+                    Toast ToastMessage = Toast.makeText(rootView.getContext(),"Task New!!!", Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_bground);
+                    ToastMessage.show();
+                    MyTaskAllFrag fragment = new MyTaskAllFrag();
+                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
+            }
+        });
+
         return rootView;
     }
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
     public void FillServiceData() {
         //==============Fill Data=
         try {
@@ -177,7 +279,7 @@ FillDataPhotos();
 
     private void highlightCurrentRow(View rowView) {
 
-        rowView.setBackgroundColor(getResources().getColor(R.color.focus_box_frame));
+        rowView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBackGround));
 
     }
 
@@ -189,6 +291,8 @@ FillDataPhotos();
 
     public void FillData(String service) {
         //==============Initialize list=
+        lstgross.setVisibility(View.VISIBLE);
+        lstgross1.setVisibility(View.GONE);
         try {
             String query;
 
@@ -202,16 +306,22 @@ FillDataPhotos();
                         "                    inner join [Service] s on s.ID=upct.serviceid" +
                         " inner join [UserPropertyCostCategory] c on c.id=upct.propertycostcategoryid" +
                         " where propertycostcategoryid in(4,5,6) and userid=" + activity.id;
-            } else {
+            } else if (service.equals("Maintanance"))  {
                 query = "select upct.id as task_id,*  from [UserPropertyCostTask] upct\n" +
                         "                    inner join [Service] s on s.ID=upct.serviceid" +
                         " inner join [UserPropertyCostCategory] c on c.id=upct.propertycostcategoryid" +
                         " where propertycostcategoryid in(7,8,9,10) and userid=" + activity.id;
+            }else{
+                query = "select upct.id as task_id,*  from [UserPropertyCostTask] upct\n" +
+                        "                    inner join [Service] s on s.ID=upct.serviceid" +
+                        " inner join [UserPropertyCostCategory] c on c.id=upct.propertycostcategoryid" +
+                        " where  userid=" + activity.id;
             }
 
             Log.d("ReminderService In", query);
             item_taskvalue.clear();
             item_dec.clear();
+            item_status.clear();
             item_taskid.clear();
             item_taskall.clear();
 
@@ -221,82 +331,195 @@ FillDataPhotos();
 
             while (rs.next()) {
                 item_taskid.add(rs.getInt("task_id"));
+                item_status.add(rs.getString("status"));
                 item_taskall.add(rs.getString("service"));
                 if (rs.getString("category").contains("Insurance")) {
-                    Insurance = Insurance + rs.getString("service");
+                    Insurance = Insurance + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Bond")) {
                     Bond = Bond + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Association")) {
-                    Association = Association + rs.getString("service");
+                    Association = Association + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Taxrates")) {
-                    Taxrates = Taxrates + rs.getString("service");
+                    Taxrates = Taxrates + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Electricity")) {
-                    Electricity = Electricity + rs.getString("service");
+                    Electricity = Electricity + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Water")) {
-                    Water = Water + rs.getString("service");
+                    Water = Water + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Cleaning")) {
-                    Cleaning = Cleaning + rs.getString("service");
+                    Cleaning = Cleaning + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Security")) {
-                    Security = Security + rs.getString("service");
+                    Security = Security + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Gardening")) {
-                    Gardening = Gardening + rs.getString("service");
+                    Gardening = Gardening + rs.getString("service")+"\n";
                 } else if (rs.getString("category").contains("Homerepairs")) {
-                    Homerepairs = Homerepairs + rs.getString("service");
+                    Homerepairs = Homerepairs + rs.getString("service")+"\n";
                 }
 
-               /* if (rs.getString("image") != null) {
-                    byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
-                    Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-                    item_profile.add(decodebitmap);
-
-                } else {
-                    Bitmap im = BitmapFactory.decodeResource(rootView.getContext().getResources(), R.drawable.profil);
-                    item_profile.add(im);
-                }*/
-
             }
+            //Count pro around
+            int proaround = 0;
+            ArrayList<Integer>id=new ArrayList<Integer>();
+            for (String tsk : item_taskall) {
+                String query1 = "SELECT *\n" +
+                        "  FROM [Contractor] \n" +
+                        " where  [service] like '%" + tsk + "%'";
+
+                PreparedStatement ps1 = con.prepareStatement(query1);
+                ResultSet rs1 = ps1.executeQuery();
+
+
+                while (rs1.next()) {
+                    int proid=rs1.getInt("id");
+                    if(!id.contains(proid)){
+                        Log.d("ReminderService In","Not" );
+                        id.add(proid);
+                        proaround+=1;
+                    }
+                }
+            }
+            txtpro.setText(String.valueOf(proaround));
             if (!Insurance.equals("")) {
                 item_taskvalue.add("Type of Task/s Insurance");
-                item_dec.add(Insurance);
+                int count = Insurance.length() - Insurance.replaceAll("\\n", "").length();
+                int index=Insurance.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Insurance);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+
+                }else{
+                    item_dec.add(Insurance.replaceAll("\n", ""));
+                }
             }
             if (!Bond.equals("")) {
                 item_taskvalue.add("Type of Task/s Bond");
-                item_dec.add(Bond);
+                int count = Bond.length() - Bond.replaceAll("\\n", "").length();
+                int index=Bond.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Bond);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Bond.replaceAll("\n", ""));
+                }
             }
             if (!Taxrates.equals("")) {
                 item_taskvalue.add("Type of Task/s Taxrates");
-                item_dec.add(Taxrates);
+                int count = Taxrates.length() - Taxrates.replaceAll("\\n", "").length();
+                int index=Taxrates.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Taxrates);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Taxrates.replaceAll("\n", ""));
+                }
             }
             if (!Association.equals("")) {
                 item_taskvalue.add("Type of Task/s Association");
-                item_dec.add(Association);
+                int count = Association.length() - Association.replaceAll("\\n", "").length();
+                int index=Association.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Association);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Association.replaceAll("\n", ""));
+                }
             }
             if (!Electricity.equals("")) {
                 item_taskvalue.add("Type of Task/s Electricity");
-                item_dec.add(Electricity);
+                int count = Electricity.length() - Electricity.replaceAll("\\n", "").length();
+                int index=Electricity.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Electricity);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Electricity.replaceAll("\n", ""));
+                }
             }
             if (!Water.equals("")) {
                 item_taskvalue.add("Type of Task/s Water");
-                item_dec.add(Water);
+                int count = Water.length() - Water.replaceAll("\\n", "").length();
+                int index=Water.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Water);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Water.replaceAll("\n", ""));
+                }
             }
             if (!Cleaning.equals("")) {
                 item_taskvalue.add("Type of Task/s Cleaning");
-                item_dec.add(Cleaning);
+                int count = Cleaning.length() - Cleaning.replaceAll("\\n", "").length();
+                int index=Cleaning.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Cleaning);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Cleaning.replaceAll("\n", ""));
+                }
             }
             if (!Security.equals("")) {
                 item_taskvalue.add("Type of Task/s Security");
-                item_dec.add(Security);
+                int count = Security.length() - Security.replaceAll("\\n", "").length();
+                int index=Security.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Security);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Security.replaceAll("\n", ""));
+                }
             }
             if (!Gardening.equals("")) {
                 item_taskvalue.add("Type of Task/s Gardening");
-                item_dec.add(Gardening);
+                int count = Gardening.length() - Gardening.replaceAll("\\n", "").length();
+                int index=Gardening.lastIndexOf("\n");
+                if(count>=2){
+                    StringBuilder a=new StringBuilder(Gardening);
+                    a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Gardening.replaceAll("\n", ""));
+                }
             }
             if (!Homerepairs.equals("")) {
                 item_taskvalue.add("Type of Task/s Homerepairs");
-                item_dec.add(Homerepairs);
+                int count = Homerepairs.length() - Homerepairs.replaceAll("\\n", "").length();
+                int index=Homerepairs.lastIndexOf("\n");
+                if(count>=2){
+                   StringBuilder a=new StringBuilder(Homerepairs);
+                   a.setCharAt(index,' ');
+                    item_dec.add(a.toString());
+
+                    Log.d("ReminderService In",count+" ###" );
+                }else{
+                    item_dec.add(Homerepairs.replaceAll("\n", ""));
+                }
             }
 
-            MyTaskAll_DetailAdapter adapter = new MyTaskAll_DetailAdapter(this.getActivity(), item_taskvalue, item_dec);
+            MyTaskAll_DetailAdapter adapter = new MyTaskAll_DetailAdapter(this.getActivity(), item_taskvalue, item_dec,item_status);
             lstgross.setAdapter(adapter);
             lstgross.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -308,7 +531,9 @@ FillDataPhotos();
                     try {
 
 
-                        final String selecteddesc = item_dec.get(position);
+
+                        final String selectedtaskvalue = item_taskvalue.get(position);
+                        final String selectedtaskdesc = item_dec.get(position);
 
                         if (currentSelectedView != null && currentSelectedView != view) {
                             unhighlightCurrentRow(currentSelectedView);
@@ -316,10 +541,82 @@ FillDataPhotos();
                         currentSelectedView = view;
                         highlightCurrentRow(currentSelectedView);
 
-                        bundles.putString("desc", selecteddesc);
-                        HomeOwnershipFrag fragment = new HomeOwnershipFrag();
+                       bundles.putString("selectedtaskvalue", selectedtaskvalue);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(rootView.getContext());
+                            builder.setTitle(selectedtaskvalue);
+                            builder.setIcon(rootView.getResources().getDrawable(R.drawable.radio));
+                            builder.setMessage("Details/Pro/Delete?");
+                            builder.setPositiveButton("Details", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                       HomeOwnershipFrag fragment = new HomeOwnershipFrag();
                         fragment.setArguments(bundles);
                         fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+
+                                }
+                            });
+                        builder.setNeutralButton("Pro", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    if (txtpro.getText().toString().equals("0")) {
+                                       Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
+                                        txtpro.setBackground(errorbg);
+                                    }else {
+                                        if (!spinnerservice.getSelectedItem().toString().equals("Select Service")) {
+                                            MyTaskPro fragment = new MyTaskPro();
+                                            bundles.putStringArrayList("item_dec",item_dec);
+                                            bundles.putString("selectedtaskvalue", selectedtaskvalue);
+                                            fragment.setArguments(bundles);
+                                            fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+                                        }else{
+                                            Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
+                                            spinnerservice.setBackground(errorbg);
+                                        }
+                                    }
+
+
+                                } catch (Exception ex) {
+                                    Log.d("ReminderService In", ex.getMessage().toString());
+                                }
+
+                            }
+                        });
+                            builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        if (!spinnerservice.getSelectedItem().toString().equals("Select Service")) {
+                                            for (int i : item_taskid) {
+                                                String commands = "delete from [UserPropertyCostTask]  where [id]='" + i + "'";
+                                                PreparedStatement preStmt = con.prepareStatement(commands);
+                                                preStmt.executeUpdate();
+                                                commands = "delete from [UserPropertyCostTaskPhotos]  where [taskid]='" + i + "'";
+                                                preStmt = con.prepareStatement(commands);
+                                                preStmt.executeUpdate();
+                                            }
+
+                                            Toast ToastMessage = Toast.makeText(rootView.getContext(), "Task Deleted Successfully!!!", Toast.LENGTH_LONG);
+                                            View toastView = ToastMessage.getView();
+                                            toastView.setBackgroundResource(R.drawable.toast_bground);
+                                            ToastMessage.show();
+                                        }else{
+                                            Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
+                                            spinnerservice.setBackground(errorbg);
+                                        }
+
+
+                                    } catch (Exception ex) {
+                                        Log.d("ReminderService In", ex.getMessage().toString());
+                                    }
+
+                                }
+                            });
+                            builder.show();
+
+
 
 
                     } catch (Exception ex) {
@@ -340,7 +637,8 @@ FillDataPhotos();
     }
 
     public void FillDataPhotos() {
-
+lstgross.setVisibility(View.GONE);
+        lstgross1.setVisibility(View.VISIBLE);
         //==============Initialize list=
         try {
             item_task.clear();
@@ -363,8 +661,8 @@ FillDataPhotos();
                 }
             }
             MyTaskAll_PhotoListAdapter adapter = new MyTaskAll_PhotoListAdapter(this.getActivity(), item_task, item_photo);
-            lstgross.setAdapter(adapter);
-            lstgross.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            lstgross1.setAdapter(adapter);
+            lstgross1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,

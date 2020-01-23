@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,18 +37,17 @@ public class MyTaskPro extends Fragment implements AdapterView.OnItemSelectedLis
     FragmentManager fragmentManager;
 
 
-
     ArrayList<String> item_proid = new ArrayList<String>();
     ArrayList<Bitmap> item_profile = new ArrayList<Bitmap>();
     ArrayList<String> item_dec = new ArrayList<String>();
 
     Connection con;
     String un, pass, db, ip;
-TextView txttask;
+    TextView txttask;
     ListView lstgross;
     ImageView edtlogoImage;
     Bundle bundle;
-
+    Bundle bundles = new Bundle();
     MainActivity activity = MainActivity.instance;
 
     int userid;
@@ -75,19 +72,18 @@ TextView txttask;
         db = "Dotsprop";
         un = "sqaloits";
         pass = "422q5mfQzU";
-        ConnectionClass cn=new ConnectionClass();
-        con =cn.connectionclass(un, pass, db, ip);
+        ConnectionClass cn = new ConnectionClass();
+        con = cn.connectionclass(un, pass, db, ip);
 
-        if (con == null)
-        {
-            Toast.makeText(rootView.getContext(), "Check your network connection!!",Toast.LENGTH_LONG).show();
+        if (con == null) {
+            Toast.makeText(rootView.getContext(), "Check your network connection!!", Toast.LENGTH_LONG).show();
         }
         bundle = this.getArguments();
 
 
         try {
 
-FillDataReleasePayment();
+            FillDataReleasePayment();
 
         } catch (Exception ex) {
             Log.d("ReminderService In", ex.getMessage());
@@ -109,43 +105,52 @@ FillDataReleasePayment();
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
     private View currentSelectedView;
+
     public void FillDataReleasePayment() {
         //==============Initialize list=
         try {
-ArrayList<String> task=bundle.getStringArrayList("item_taskall");
-for(String tsk:task){
-    String query = "SELECT *\n" +
-            "  FROM [Contractor] c\n" +
-            "where  contains([service] ,'" + tsk + "')";
+            final ArrayList<String> taskdec = bundle.getStringArrayList("item_dec");
+            final String taskvalue=bundle.getString("selectedtaskvalue");
+txttask.setText(taskvalue);
 
-    PreparedStatement ps = con.prepareStatement(query);
-    ResultSet rs = ps.executeQuery();
-    item_proid.clear();
-    item_dec.clear();
-    item_profile.clear();
-    String desc="";
-    while (rs.next()) {
-int id=rs.getInt("id");
-String address=rs.getString("businessname");
-        String query1 = "select count(controctorid) as request from UserPropertyCostTask\n" +
-                "where controctorid="+id;
-        PreparedStatement ps1 = con.prepareStatement(query1);
-        ResultSet rs1 = ps1.executeQuery();
-        rs1.next();
-        item_proid.add(String.valueOf(id));
-        desc=desc+rs.getString("businessname").toString()+"\n"+
-                rs1.getString("request").toString()+" Requests\n"+
-                "Office "+distance(address)+" Away";
-        item_dec.add(desc);
-        byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
-        Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-        item_profile.add(decodebitmap);
-    }
-}
+            item_proid.clear();
+            item_dec.clear();
+            item_profile.clear();
+            for (String tsk : taskdec) {
+                String query = "SELECT *\n" +
+                        "  FROM [Contractor] \n" +
+                        " where  [service] like '%" + tsk + "%'";
 
+                PreparedStatement ps = con.prepareStatement(query);
+                ResultSet rs = ps.executeQuery();
 
+                String desc = "";
+                while (rs.next()) {
+                    int id = rs.getInt("id");
 
+                    if(!item_proid.contains(id)){
+                        String address = rs.getString("address");
+                        String query1 = "select count(controctorid) as request from UserPropertyCostTask\n" +
+                                "where controctorid=" + id;
+                        PreparedStatement ps1 = con.prepareStatement(query1);
+                        ResultSet rs1 = ps1.executeQuery();
+                        rs1.next();
+
+                        item_proid.add(String.valueOf(id));
+                        desc = desc + rs.getString("businessname").toString() + "\n" +
+                                rs1.getString("request").toString() + " Requests\n" +
+                                "Office " + distance(address) + " Away";
+                        item_dec.add(desc);
+                        Log.d("ReminderService In", id+" "+desc);
+                        byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
+                        Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                        item_profile.add(decodebitmap);
+                    }
+
+                }
+            }
 
 
             MyTaskProAdapter adapter = new MyTaskProAdapter(this.getActivity(), item_profile, item_proid, item_dec);
@@ -159,10 +164,12 @@ String address=rs.getString("businessname");
 
                     try {
 
-/*
-                        final String selecteddesc = item_dec.get(position);
-                        String query = "SELECT * FROM [AdvanceAdjustments] p " +
-                                " where [Status] ='A' and  AdvanceNumber='" + selectedpayno +"'";
+
+                        final String selectedproid = item_proid.get(position);
+
+                        String query = "SELECT *\n" +
+                                "  FROM [Contractor] \n" +
+                                " where  [id]='" + selectedproid +"'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         Log.d("ReminderService In",query);
@@ -175,8 +182,10 @@ String address=rs.getString("businessname");
                                 currentSelectedView = view;
                                 highlightCurrentRow(currentSelectedView);
 
-                                bundles.putString("desc", selecteddesc);
-                                HomeOwnershipFrag fragment = new HomeOwnershipFrag();
+                                bundles.putString("selectedproid", selectedproid);
+                            bundles.putStringArrayList("item_dec",taskdec);
+                            bundles.putString("taskvalue", taskvalue);
+                                HomeContractor fragment = new HomeContractor();
                                 fragment.setArguments(bundles);
                                 fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
@@ -184,8 +193,8 @@ String address=rs.getString("businessname");
 
 
                         }
-                        */
-                    } catch(Exception ex) {
+
+                    } catch (Exception ex) {
                         //  Toast.makeText(rootView.getContext(), ex.getMessage().toString(),Toast.LENGTH_LONG).show();
                         Log.d("ReminderService In", ex.getMessage().toString());
                     }
@@ -202,47 +211,49 @@ String address=rs.getString("businessname");
 //===========
 
     }
+
     public String distance(String address) {
-        String dist="";
+        String dist = "";
         try {
 
 
-                GPSTracker mGPS = new GPSTracker(rootView.getContext());
-                if (mGPS.canGetLocation) {
+            GPSTracker mGPS = new GPSTracker(rootView.getContext());
+            if (mGPS.canGetLocation) {
 
-                    Geocoder geocoder;
-                    geocoder = new Geocoder(rootView.getContext(), Locale.getDefault());
-                    double Lat = geocoder.getFromLocationName(address, 1).get(0).getLatitude();
-                    double Lon = geocoder.getFromLocationName(address, 1).get(0).getLongitude();
-                    mGPS.getLocation();
-                    double Lat1 = mGPS.getLatitude();
-                    double Lon1 = mGPS.getLongitude();
+                Geocoder geocoder;
+                geocoder = new Geocoder(rootView.getContext(), Locale.getDefault());
+                double Lat = geocoder.getFromLocationName(address, 1).get(0).getLatitude();
+                double Lon = geocoder.getFromLocationName(address, 1).get(0).getLongitude();
+                mGPS.getLocation();
+                double Lat1 = mGPS.getLatitude();
+                double Lon1 = mGPS.getLongitude();
 
-                    double distance;
-                    Location locationA = new Location("");
-                    locationA.setLatitude(Lat);
-                    locationA.setLongitude(Lon);
+                double distance;
+                Location locationA = new Location("");
+                locationA.setLatitude(Lat);
+                locationA.setLongitude(Lon);
 
-                    Location locationB = new Location("");
-                    locationB.setLatitude(Lat1);
-                    locationB.setLongitude(Lon1);
-
-
-                    distance = locationA.distanceTo(locationB) / 1000;   // in km
-                    dist=String.valueOf((double) Math.round(distance)) + "Km";
-                    // Get reults
+                Location locationB = new Location("");
+                locationB.setLatitude(Lat1);
+                locationB.setLongitude(Lon1);
 
 
-                } else {
-                    Log.d("ReminderService In", "GPS OFF");
-                    mGPS.showSettingsAlert();
-                }
+                distance = locationA.distanceTo(locationB) / 1000;   // in km
+                dist = String.valueOf((double) Math.round(distance)) + "Km";
+                // Get reults
+
+
+            } else {
+                Log.d("ReminderService In", "GPS OFF");
+                mGPS.showSettingsAlert();
+            }
 
         } catch (Exception ex) {
             Log.d("ReminderService In", ex.getMessage());
         }
-        return  dist;
+        return dist;
     }
+
     private void highlightCurrentRow(View rowView) {
 
         rowView.setBackgroundColor(getResources().getColor(R.color.focus_box_frame));
