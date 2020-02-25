@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    android:id="@+id/homepage"
+
+    >
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+
+        android:weightSum="3" >
+        <ImageView
+            android:id="@+id/home"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/ongoingproject" />
+
+        <TextView
+            android:id="@+id/txttotalannualcost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+ >
+        <ImageView
+            android:id="@+id/projectImages"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/profilephoto" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:id="@+id/layoutmyprojecttask"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryBackGround"
+        android:weightSum="3" >
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:text="My Project Task"
+
+            />
+        <ImageView
+
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+
+            android:id="@+id/b1"
+            android:src="@drawable/setting1" />
+
+
+        <TextView
+            android:id="@+id/txttasktotal"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="112"
+            android:textAlignment="center"
+            android:textColor="@color/colorRed"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:id="@+id/layoutmaintanance"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryBackGround"
+        android:weightSum="3" >
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:text="My Project"
+
+            />
+        <ImageView
+
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/b2"
+            android:layout_gravity="center"
+            android:src="@drawable/profile" />
+        <TextView
+            android:id="@+id/txtprop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:textAlignment="center"
+            android:textColor="@color/colorRed"
+            android:textStyle="bold" />
+
+
+        <ImageView
+
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/b3"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/gage" />
+        <TextView
+            android:id="@+id/txtpercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20%"
+
+            android:textAlignment="center"
+            android:textColor="@color/colorRed"
+
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

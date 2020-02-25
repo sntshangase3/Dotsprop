@@ -62,7 +62,7 @@ public class RegisterFrag extends Fragment {
     String un, pass, db, ip;
     ConnectionClass connectionClass;
     EditText edtappuserId, edtuserrole, edtfirstname,edtstreet,edtsuburb,edtcity,edtpostalcode,  edtemail, edtpassword, edtcontactno,edtprovice,edtdatebirth;
-    ImageView edtprofileImage;
+    ImageView edtprofileImage,b1,b2;
     Button btncreate, btnsave;
 
 
@@ -90,7 +90,8 @@ public class RegisterFrag extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.register, container, false);
 
-
+        b1 = (ImageView) rootView.findViewById(R.id.b1);
+        b2 = (ImageView) rootView.findViewById(R.id.b2);
         edtappuserId = (EditText) rootView.findViewById(R.id.edtappuserid);
         edtuserrole = (EditText) rootView.findViewById(R.id.edtuserrole);
         edtfirstname = (EditText) rootView.findViewById(R.id.edtfirstname);
@@ -251,6 +252,33 @@ public class RegisterFrag extends Fragment {
 
                 UpdateProfile updatePro = new UpdateProfile();
                 updatePro.execute("");
+
+
+
+            }
+        });
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment frag = new RegisterFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, frag).commit();
+
+
+            }
+        });
+
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = new RegisterContractorFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+
 
             }
         });
@@ -465,16 +493,7 @@ public class RegisterFrag extends Fragment {
             } else {
 
 
-                if (activity.edthidenuserid.getText().toString().equals("")) {
-                    edtuserrole.setText("2");
-                    // btnsave.setVisibility(View.GONE);
-                    // btncreate.setVisibility(View.VISIBLE);
-                } else {
-                    edtappuserId.setText(activity.edthidenuserid.getText().toString());
-                    edtuserrole.setText("2");
-//btncreate.setVisibility(View.GONE);
-                    // btnsave.setVisibility(View.VISIBLE);
-                    String query = "select * from [AppUser] where [id]=" + Integer.parseInt(edtappuserId.getText().toString());
+                    String query = "select * from [AppUser] where [id]=" + activity.id;
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     rs.next();
@@ -490,8 +509,8 @@ public class RegisterFrag extends Fragment {
                         edtsuburb.setText(address.substring(0,address.indexOf(',')));
                         address=address.substring(address.indexOf(',')+1).trim();
                         edtcity.setText(address.substring(0,address.indexOf(',')));
-                        address=address.substring(address.indexOf(',')+1).trim();
-                        edtpostalcode.setText(address.substring(0,address.indexOf(',')));
+                       address=address.substring(address.indexOf(',')+1).trim();
+                      edtpostalcode.setText(address);
 
 
                         edtemail.setText(rs.getString("email"));
@@ -500,7 +519,7 @@ public class RegisterFrag extends Fragment {
                         edtprovice.setText(rs.getString("provice"));
                         edtdatebirth.setText(rs.getString("dob"));
 
-                        edtuserrole.setText(rs.getString("userRole"));
+
 
                         if (rs.getString("image") != null) {
                             byte[] decodeString = Base64.decode(rs.getString("image"), Base64.DEFAULT);
@@ -516,14 +535,14 @@ public class RegisterFrag extends Fragment {
 
 
                     }
-                }
+
 
 
             }
 
 
         } catch (Exception ex) {
-            // Toast.makeText(rootView.getContext(), ex.getMessage().toString()+"Here",Toast.LENGTH_LONG).show();
+            Log.d("ReminderService In", ex.getMessage().toString());
         }
 //==========
     }

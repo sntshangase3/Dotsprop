@@ -34,8 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,11 +43,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-
     //---------con--------
     Connection con;
-    String un,pass,db,ip;
-    int click=0;
+    String un, pass, db, ip;
+    int click = 0;
     Calendar c;
     //---------con--------
 
@@ -57,36 +54,41 @@ public class MainActivity extends AppCompatActivity
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private static final String API_KEY = "AIzaSyA1RX5FgK6qKIuHOkQP6D40uEEaL5eLi0w";
     Calendar cal;
-    int hour ;
-    int min=0;
-    int sec ;
+    int hour;
+    int min = 0;
+    int sec;
     static MainActivity instance;
     private RadioButton radioSexButton;
 
-    EditText edtuseremail,edtpass,edthidenuserid,edthidenuserrole;
+    EditText edtuseremail, edtpass, edthidenuserid, edthidenuserrole;
     Button btnlogin;
 
     boolean doubleBackToExitPressedOnce = false;
 
     LinearLayout loginlayout;
-    TextView txtcreate,txtcreatec;
+    TextView txtcreate;
     NavigationView navigationView;
     FragmentManager fragmentManager;
     String m_Text_user = "";
 
     Intent mServiceIntent;
     private SensorService mSensorService;
-    String status="";
-    String active_status="";
-    Bundle bundle=new Bundle();
+    String status = "";
+    String active_status = "";
+    public String userstate;
+    Bundle bundle = new Bundle();
+    Bundle bundles = new Bundle();
     Context ctx;
-   public String id,firstname,position,email;
-    public  int hometimes=0;
-    public int propertyid=0;
+    public String id, firstname, position, email;
+    public int hometimes = 0;
+    public int propertyid = 0;
+    public int projectid = 0;
     public static final String PREFS_NAME = "MyApp_Settings";
+
     public Context getCtx() {
         return ctx;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        loginlayout =(LinearLayout) findViewById(R.id.userloginlayout);
+        loginlayout = (LinearLayout) findViewById(R.id.userloginlayout);
 
         fragmentManager = getFragmentManager();
 
@@ -108,8 +110,8 @@ public class MainActivity extends AppCompatActivity
         edtpass = (EditText) findViewById(R.id.editText2);
         edthidenuserid = (EditText) findViewById(R.id.edthidenuserid);
         edthidenuserrole = (EditText) findViewById(R.id.edthidenuserrole);
-        txtcreate=this.findViewById(R.id.txtcreate);
-        txtcreatec=this.findViewById(R.id.txtcreatec);
+        txtcreate = this.findViewById(R.id.txtcreate);
+
 
 
         instance = this;
@@ -128,9 +130,8 @@ public class MainActivity extends AppCompatActivity
         pass = "422q5mfQzU";
 
 
-
         int currentapiVersion = Build.VERSION.SDK_INT;
-        if (currentapiVersion > Build.VERSION_CODES.JELLY_BEAN_MR1){
+        if (currentapiVersion > Build.VERSION_CODES.JELLY_BEAN_MR1) {
             // Do something for lollipop and above versions
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -145,9 +146,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.setVisibility(View.GONE);
 
 
-
-
-        } else{
+        } else {
             // do something for phones running an SDK before lollipop
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,9 +162,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.setVisibility(View.GONE);
 
 
-
         }
-
 
 
         btnlogin.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +176,7 @@ public class MainActivity extends AppCompatActivity
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
                 // Writing data to SharedPreferences
                 SharedPreferences.Editor editor = settings.edit();
-                if(!edthidenuserid.getText().toString().equals("")){
+                if (!edthidenuserid.getText().toString().equals("")) {
                     editor.clear();
                     editor.putString("keycouserid", edthidenuserid.getText().toString());
 
@@ -193,32 +190,23 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-
-
-    public void CreateAccout(View view){
+    public void CreateAccout(View view) {
         Fragment fragment = new RegisterFrag();
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.mainFrame, fragment).commit();
     }
-    public void CreateAccoutC(View view){
-        Fragment fragment = new RegisterContractorFrag();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.mainFrame, fragment).commit();
-    }
 
 
-    public void ForgotLoginCouser(View view){
 
+
+    public void ForgotLoginCouser(View view) {
 
 
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            TextView title=new TextView(this);
-            title.setPadding(10,10,10,10);
+            TextView title = new TextView(this);
+            title.setPadding(10, 10, 10, 10);
             title.setText("Forgot Login");
             title.setGravity(Gravity.CENTER);
             title.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -236,7 +224,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     m_Text_user = input.getText().toString();
-                    SendMail send =new SendMail();
+                    SendMail send = new SendMail();
                     send.execute("");
                 }
             });
@@ -249,16 +237,12 @@ public class MainActivity extends AppCompatActivity
             builder.show();
 
 
-
         } catch (Exception ex) {
 
         }
 
 
-
     }
-
-
 
 
     @Override
@@ -270,17 +254,16 @@ public class MainActivity extends AppCompatActivity
             return;
 
 
-        }
-        else{
-            if(loginlayout.getVisibility()==View.GONE  ){
+        } else {
+            if (loginlayout.getVisibility() == View.GONE) {
 
                 if (!edthidenuserid.getText().toString().equals("")) {
                     Fragment fragment = new HomeFragment();
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.mainFrame, fragment).commit();
-                    click=click+1;
-                    if(click>=3){
+                    click = click + 1;
+                    if (click >= 3) {
                         finish();
                         System.exit(0);
                     }
@@ -302,9 +285,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         }, 2000);
-
-
-
 
 
     }
@@ -336,44 +316,92 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment=null;
-        if (id == R.id.homepage) {
-            // Handle the camera action
-            fragment = new HomeFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.mainFrame, fragment).commit();
 
-        }
-        else if (id == R.id.schedule) {
-            fragment = new MyTaskAllFrag();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.mainFrame, fragment).commit();
-        }
-        else if (id == R.id.notification) {
-            fragment = new MyTaskPro();
+
+        Fragment fragment = null;
+        if (id == R.id.homepage) {
+            if (userstate == "O") {
+                fragment = new HomeFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+            } else {
+                fragment = new NotificationCentre();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+            }
+
+
+        } else if (id == R.id.schedule) {
+            if (userstate == "O") {
+                fragment = new MyTaskAllFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+            } else {
+                Toast.makeText(MainActivity.this, "Login with Owner Profile!!!", Toast.LENGTH_LONG).show();
+            }
+
+        } else if (id == R.id.progress) {
+            if (userstate == "O") {
+                fragment = new ReportsBarChartFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+            } else {
+                Toast.makeText(MainActivity.this, "Login with Owner Profile!!!", Toast.LENGTH_LONG).show();
+            }
+
+        } else if (id == R.id.notification) {
+            fragment = new NotificationCentre();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.mainFrame, fragment).commit();
         } else if (id == R.id.ownership) {
-            fragment = new HomeOwnershipFrag();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+            if (userstate == "O") {
+                fragment = new HomeOwnershipFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+            } else {
+                Toast.makeText(MainActivity.this, "Login with Owner Profile!!!", Toast.LENGTH_LONG).show();
+            }
+        }else if (id == R.id.ongoing) {
+
+           if (userstate == "O") {
+                fragment = new HomeOngoingProject();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+            } else {
+                Toast.makeText(MainActivity.this, "Login with Owner Profile!!!", Toast.LENGTH_LONG).show();
+            }
+        }else if (id == R.id.findpro) {
+
+            if (userstate == "O") {
+                fragment = new MyTaskPro();
+                bundles.putString("item_type","search");
+                fragment.setArguments(bundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+            } else {
+                Toast.makeText(MainActivity.this, "Login with Owner Profile!!!", Toast.LENGTH_LONG).show();
+            }
         }
         else if (id == R.id.profile) {
-            fragment = new RegisterFrag();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.mainFrame, fragment).commit();
-        }
-        else if (id == R.id.findcontructor) {
-            fragment = new RegisterContractorFrag();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.mainFrame, fragment).commit();
-        }
-        else if (id == R.id.contact) {
+
+            if (userstate == "O") {
+                fragment = new RegisterFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+            } else {
+                fragment = new RegisterContractorFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrame, fragment).commit();
+            }
+        } else if (id == R.id.contact) {
 
             Bundle bundle = new Bundle();
             bundle.putString("email", edtuseremail.getText().toString());
@@ -381,8 +409,7 @@ public class MainActivity extends AppCompatActivity
             fragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
-        }
-        else if (id == R.id.logout) {
+        } else if (id == R.id.logout) {
 
 
             finish();
@@ -409,7 +436,7 @@ public class MainActivity extends AppCompatActivity
             } else {
 
                 //String query = "select * from [AppUser] where [id]=1";// + Integer.parseInt(edtappuserId.getText().toString());
-                String query = "select * from [AppUser] where [email]= '" + edtuseremail.getText().toString() + "' and [password] = '"+ edtpass.getText().toString() +"'";
+                String query = "select * from [AppUser] where [email]= '" + edtuseremail.getText().toString() + "' and [password] = '" + edtpass.getText().toString() + "'";
                 PreparedStatement ps = con.prepareStatement(query);
                 ResultSet rs = ps.executeQuery();
                 rs.next();
@@ -417,27 +444,25 @@ public class MainActivity extends AppCompatActivity
 
                 if (rs.getRow() != 0) {
 
-                    edthidenuserid.setText( rs.getString("id"));
+                    edthidenuserid.setText(rs.getString("id"));
                     // edthidenuserrole.setText(rs.getString("userRole"));
 
                 }
-
 
 
             }
 
 
         } catch (Exception ex) {
-            Log.i ("isMyServiceRunning?", ex.getMessage()+"@@@");
-            Toast.makeText(this.getBaseContext(), ex.getMessage().toString()+"Main",Toast.LENGTH_LONG).show();
+            Log.i("isMyServiceRunning?", ex.getMessage() + "@@@");
+            Toast.makeText(this.getBaseContext(), ex.getMessage().toString() + "Main", Toast.LENGTH_LONG).show();
 
         }
 //==========
 
     }
 
-    public class DoLogin extends AsyncTask<String,String,String>
-    {
+    public class DoLogin extends AsyncTask<String, String, String> {
         String z = "";
         Boolean isSuccess = false;
 
@@ -457,14 +482,13 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(String r) {
 
 
-
-            if(isSuccess) {
+            if (isSuccess) {
                 // Toast.makeText(MainActivity.this,r,Toast.LENGTH_LONG).show();
 
-                if(r.equals("Owner Login Successfully")){
-                    if(active_status.equals("false")){
-                        Toast.makeText(MainActivity.this,"Profile Deactivate",Toast.LENGTH_LONG).show();
-                    }else{
+                if (r.equals("Owner Login Successfully")) {
+                    if (active_status.equals("false")) {
+                        Toast.makeText(MainActivity.this, "Profile Deactivate", Toast.LENGTH_LONG).show();
+                    } else {
                         navigationView.setVisibility(View.VISIBLE);
                         loginlayout.setVisibility(View.GONE);
 
@@ -475,18 +499,17 @@ public class MainActivity extends AppCompatActivity
                     }
 
 
-                }
-                else if(r.equals("Contractor Login Successfully")){
+                } else if (r.equals("Contractor Login Successfully")) {
                     navigationView.setVisibility(View.VISIBLE);
                     loginlayout.setVisibility(View.GONE);
 
-                    Fragment fragment = new HomeContractor();
+                    Fragment fragment = new NotificationCentre();
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.mainFrame, fragment).commit();
                 }
-            }else{
-                Toast.makeText(MainActivity.this,r,Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MainActivity.this, r, Toast.LENGTH_LONG).show();
             }
 
         }
@@ -494,33 +517,29 @@ public class MainActivity extends AppCompatActivity
         @Override
 
         protected String doInBackground(String... params) {
-            if(userid.trim().equals("")|| password.trim().equals(""))
+            if (userid.trim().equals("") || password.trim().equals(""))
                 z = "Please enter User Id and Password";
-            else
-            {
-                try
-                {
-                    ConnectionClass cn=new ConnectionClass();
-                    con =cn.connectionclass(un, pass, db, ip);        // Connect to database
-                    if (con == null)
-                    {
+            else {
+                try {
+                    ConnectionClass cn = new ConnectionClass();
+                    con = cn.connectionclass(un, pass, db, ip);        // Connect to database
+                    if (con == null) {
                         z = "Check Your Internet Access!";
-                    }
-                    else
-                    {
+                    } else {
                         //Co-user
-                        String query = "select * from [AppUser] where [email]= '" + userid.toString() + "' and [password] = '"+ password.toString() +"'";
+                        String query = "select * from [AppUser] where [email]= '" + userid.toString() + "' and [password] = '" + password.toString() + "'";
                         PreparedStatement ps = con.prepareStatement(query);
                         ResultSet rs = ps.executeQuery();
                         rs.next();
                         //Contractor
-                        String queryas = "select * from [Contractor] where [email]= '" + userid.toString() + "' and [password] = '"+ password.toString() +"'";
+                        String queryas = "select * from [Contractor] where [email]= '" + userid.toString() + "' and [password] = '" + password.toString() + "'";
                         PreparedStatement psas = con.prepareStatement(queryas);
                         ResultSet rsas = psas.executeQuery();
                         rsas.next();
-                        if(rs.getRow()!=0){
+                        if (rs.getRow() != 0) {
                             try {
                                 id = rs.getString("id").trim();
+                                userstate = "O";
                                 firstname = rs.getString("firstname").trim();
                                 position = rs.getString("position").trim();
                                 email = rs.getString("email").trim();
@@ -529,26 +548,23 @@ public class MainActivity extends AppCompatActivity
                                 Log.d("ReminderService In", ex.getMessage() + "######");
                             }
                             z = "Owner Login Successfully";
-                            isSuccess=true;
+                            isSuccess = true;
                             con.close();
-                        }   else if(rsas.getRow()!=0){
+                        } else if (rsas.getRow() != 0) {
                             id = rsas.getString("id").trim();
+                            userstate = "C";
                             z = "Contractor Login Successfully";
-                            isSuccess=true;
+                            isSuccess = true;
                             con.close();
-                        }
-
-                        else{
+                        } else {
                             z = "Invalid Login!";
                             isSuccess = false;
                         }
                     }
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     isSuccess = false;
                     // z = "Invalid data input or lost connection!!!";
-                    z=ex.getMessage();
+                    z = ex.getMessage();
                 }
 
             }
@@ -559,8 +575,9 @@ public class MainActivity extends AppCompatActivity
     private class SendMail extends AsyncTask<String, Integer, Void> {
 
         private ProgressDialog progressDialog;
-        private String z="";
+        private String z = "";
         Boolean isSuccess = false;
+
         @Override
         protected void onPreExecute() {
             // super.onPreExecute();
@@ -572,10 +589,10 @@ public class MainActivity extends AppCompatActivity
             // super.onPostExecute(aVoid);
             progressDialog.dismiss();
 
-            if(isSuccess) {
+            if (isSuccess) {
                 Toast.makeText(MainActivity.this, z, Toast.LENGTH_LONG).show();
 
-            }else{
+            } else {
                 // Toast.makeText(MainActivity.this, "Could not send email", Toast.LENGTH_LONG).show();
                 Toast.makeText(MainActivity.this, z, Toast.LENGTH_LONG).show();
             }
@@ -586,26 +603,22 @@ public class MainActivity extends AppCompatActivity
 
             try {
 
-                ConnectionClass cn=new ConnectionClass();
-                con =cn.connectionclass(un, pass, db, ip);        // Connect to database
-                if (con == null)
-                {
+                ConnectionClass cn = new ConnectionClass();
+                con = cn.connectionclass(un, pass, db, ip);        // Connect to database
+                if (con == null) {
                     z = "Check Your Internet Access!";
-                }
-                else
-                {
+                } else {
                     String query = "select * from [AppUser] where [email]= '" + m_Text_user + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     rs.next();
 
 
-
-                    if(rs.getRow()!=0){
+                    if (rs.getRow() != 0) {
                         Mail m = new Mail("Info@sqaloitsolutions.co.za", "Mgazi@251085");
-                         String to = m_Text_user;
+                        String to = m_Text_user;
                         String subject = "Your Login Details";
-                        String message = "Username :"+rs.getString("email").trim()+"\nPassword :"+rs.getString("password").trim()+"\n\n------\nRegards - MyCarWash\n\nThis email was intended for & sent to you by MyCarWash App \nThis email was intended for & sent to you by MyCarWash App\nA platform of Sqalo IT Solutions\n1 Wemyss St,Brooklyn,7405,Cape Town";
+                        String message = "Username :" + rs.getString("email").trim() + "\nPassword :" + rs.getString("password").trim() + "\n\n------\nRegards - MyCarWash\n\nThis email was intended for & sent to you by MyCarWash App \nThis email was intended for & sent to you by MyCarWash App\nA platform of Sqalo IT Solutions\n1 Wemyss St,Brooklyn,7405,Cape Town";
 
                         String[] toall = {to};
 
@@ -614,23 +627,23 @@ public class MainActivity extends AppCompatActivity
 
                         m.setSubject(subject);
                         m.setBody(message);
-                        if(m.send()) {
+                        if (m.send()) {
 
-                            z="Login details sent to your email";
-                            isSuccess=true;
+                            z = "Login details sent to your email";
+                            isSuccess = true;
                             con.close();
                         } else {
                             isSuccess = false;
                         }
-                    }else{
-                        z="Account with this email does not exit!!!";
+                    } else {
+                        z = "Account with this email does not exit!!!";
                         isSuccess = false;
                     }
                 }
 
-            } catch(Exception e) {
+            } catch (Exception e) {
 
-                z="Account with this email does not exit!!!";
+                z = "Account with this email does not exit!!!";
             }
             return null;
         }

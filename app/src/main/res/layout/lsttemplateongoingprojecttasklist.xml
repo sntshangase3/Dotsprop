@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:id="@+id/relativeorder"
+    android:orientation="vertical">
+
+
+
+    <TextView
+        android:id="@+id/lbltaskvalue"
+        android:textSize="16sp"
+        android:textStyle="bold"
+
+        android:layout_width="280dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_height="wrap_content"
+      />
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/setting"
+        android:src="@drawable/jobs"
+        android:layout_weight="1"
+        android:layout_toEndOf="@+id/lbldec" />
+
+    />
+    <TextView
+        android:id="@+id/lbldec"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:text="R60022"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_toEndOf="@+id/lbltaskvalue"
+     />
+    <TextView
+        android:id="@+id/lblstatus"
+        android:layout_below="@id/lbldec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5 Tasks"
+        android:textStyle="italic"
+        android:textColor="@color/colorRed"
+     />
+
+
+
+
+
+</RelativeLayout>

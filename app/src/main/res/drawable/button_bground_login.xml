@@ -5,7 +5,7 @@
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/colorPrimary"/>
-            <stroke android:color="@color/colorPrimaryBackGround" android:width="4dp" />
+            <!--<stroke android:color="@color/colorPrimaryBackGround" android:width="4dp" />-->
             <!--corners allow us to make the rounded corners button-->
             <corners android:radius="20dp" />
         </shape>

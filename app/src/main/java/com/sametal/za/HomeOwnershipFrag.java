@@ -1655,8 +1655,8 @@ public class HomeOwnershipFrag extends Fragment {
                 try {
 
 
-                    String query = "insert into [UserPropertyCostTask]([cost],[serviceid],[propertycostcategoryid],[userid],[status]) " +
-                            "values ('" + price + "','" + service + "','" + category + "','" + Integer.parseInt(activity.id) + "','New')";
+                    String query = "insert into [UserPropertyCostTask]([cost],[serviceid],[propertycostcategoryid],[userid],[status],[isread]) " +
+                            "values ('" + price + "','" + service + "','" + category + "','" + Integer.parseInt(activity.id) + "','New','No')";
                     PreparedStatement preparedStatement = con.prepareStatement(query);
                     preparedStatement.executeUpdate();
                     String query1 = "select MAX(id) as new_id from [UserPropertyCostTask]";

@@ -69,12 +69,14 @@ public class ContactUs extends Fragment {
 
         }
 
+
+
         fb.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://www.sametal.co.za/"));
+                intent.setData(Uri.parse("https://web.facebook.com/DotspropZA"));
                 startActivity(intent);
             }
         });
@@ -84,7 +86,7 @@ public class ContactUs extends Fragment {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://www.sametal.co.za/"));
+                intent.setData(Uri.parse("https://twitter.com/Dotsprop"));
                 startActivity(intent);
             }
         });
@@ -95,7 +97,7 @@ public class ContactUs extends Fragment {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://www.sametal.co.za/"));
+                intent.setData(Uri.parse("https://www.instagram.com/dotsprop/"));
                 startActivity(intent);
             }
         });
@@ -149,13 +151,11 @@ private String z="";
             try {
                 Mail m = new Mail("Info@sqaloitsolutions.co.za", "Mgazi@251085");
 
-             String[] to = {"sibusiso.ntshangase@sametal.co.za"};
+             String[] to = {"jabun@ngobeniholdings.co.za"};
 
                 String from =txtFrom.getText().toString();
                 String subject = txtSubject.getText().toString();
-                String message = txtMessage.getText().toString()+"\n\n------\nRegards - SA Metal App\n\nThis email was intended for & sent to you by SA Metal App(By Dev)\n14 Christian Avenue\n" +
-                        "Epping 2\n" +
-                        "Cape Town– South Africa";
+                String message = txtMessage.getText().toString()+"\n\n------\nRegards - Dotsprop App\n\nThis email was intended for & sent to you by Dotsprop";
 
                 m.setTo(to);
                 m.setFrom(from);

@@ -4,9 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -44,7 +46,7 @@ public class HomeContractor extends Fragment {
     MainActivity activity =   MainActivity.instance;
     FragmentManager fragmentManager;
 
-
+    String mobileno = "";
 
     Calendar date;
     //---------con--------
@@ -102,61 +104,29 @@ String selectedproid="";
         FillData();
         btnBook.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 HomeContractor_Help fragment = new HomeContractor_Help();
                 fragment.setArguments(bundle);
                 fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
-                    try {
-
-
-                     /*   Date today = new Date();
-                        SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
-                        String todaydate = date_format.format(today);
-                        String refno = "SITS" + today.getHours() + "" + today.getMinutes() + "" + today.getSeconds();
-
-                        if (todaydate.trim().equals("")|| bookingdaydate.trim().equals("")|| edtdistance.getText().toString().equals("")|| edtaddress.getText().toString().equals("")|| selectedpro.trim().equals("") )
-                        {
-                            Toast ToastMessage = Toast.makeText(rootView.getContext(), "Please fill in all required details...", Toast.LENGTH_LONG);
-                            View toastView = ToastMessage.getView();
-                            toastView.setBackgroundResource(R.drawable.toast_bground);
-                            ToastMessage.show();
-                        }
-                        else {
-                           Log.d("ReminderService In", refno+" "+activity.id+ " "+ selectedpro);
-                            String command = "insert into [Collection]([createddate],[collectionsdate],[daysleft],[collectionstatus],[collectiondistance],[location],[carownerid],[carwashid],[driverid],[ref],[warning] ,[prepdate]\n" +
-                                    "      ,[transitdate]\n" +
-                                    "      ,[deliverdate],[isread]) " +
-                                    "values ('" + todaydate + "','" + bookingdaydate + "','1 Days','New','" + edtdistance.getText().toString() +"','" + edtaddress.getText().toString() + "','" + activity.id + "','" + selectedpro + "',0,'" + refno + "','No Reported Possible Delay','#####','#####','#####','No')";
-                            PreparedStatement preparedStatement = con.prepareStatement(command);
-                            preparedStatement.executeUpdate();
-
-                            Toast ToastMessage = Toast.makeText(rootView.getContext(), "Booking Successfully!!!", Toast.LENGTH_LONG);
-                            View toastView = ToastMessage.getView();
-                            toastView.setBackgroundResource(R.drawable.toast_bground);
-                            ToastMessage.show();
-                            Fragment frag = new HomeFragment();
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.mainFrame, frag).commit();
-                        }*/
-
-
-
-                    } catch (Exception ex) {
-                        Log.d("ReminderService In", ex.getMessage().toString());
-                    }
-
-
 
             }
         });
+
         btnCall.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent callnoIntent = new Intent(Intent.ACTION_CALL);
+                    callnoIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    callnoIntent.setData(Uri.parse("tel:" + mobileno));
+                    getActivity().startActivity(callnoIntent);
+                } catch (SecurityException ex) {
+                    Toast.makeText(rootView.getContext(), "Tel/Cell No Invalid!!", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
-
 
 
         return rootView;
@@ -179,7 +149,7 @@ String selectedproid="";
 
 
             if (rs.getRow() != 0) {
-
+mobileno=rs.getString("contact");
                 txtcontactname.setText(rs.getString("contactname"));
                 txtbusinessname.setText(rs.getString("businessname"));
                 txttotalyears.setText(rs.getString("numberofserviceyears")+" Years");

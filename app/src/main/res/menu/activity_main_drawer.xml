@@ -27,16 +27,16 @@
         android:icon="@drawable/ongoingproject"
         android:title="On-Going Projects" />
     <item
-        android:id="@+id/findcontructor"
-        android:icon="@drawable/search"
-        android:title="Contractors" />
+        android:id="@+id/findpro"
+        android:icon="@drawable/profile"
+        android:title="Find Pro" />
     <item
         android:id="@+id/progress"
-        android:icon="@drawable/radio"
+        android:icon="@drawable/gage"
         android:title="Maintenance Progress" />
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/profile"
+        android:icon="@drawable/userprof"
         android:title="My Account" />
 
     <item

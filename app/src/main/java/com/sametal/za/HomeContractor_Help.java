@@ -96,12 +96,7 @@ public class HomeContractor_Help extends Fragment {
                 if (!bundle.getString("selectedproid").toString().equals("")) {
                     selectedproid=bundle.getString("selectedproid");
                     tasktype=bundle.getString("taskvalue");
-                    ArrayList<String> taskdec = bundle.getStringArrayList("item_dec");
-                    String item="";
-                    for (String tsk : taskdec) {
-                      item=item+tsk+"\n";
-                    }
-                    desc=item;
+                  desc = bundle.getString("item_type");
 
                 }
             }
@@ -111,15 +106,35 @@ public class HomeContractor_Help extends Fragment {
         FillData();
         btnstart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+if(tasktype.equals("Pros")){
+    Toast ToastMessage = Toast.makeText(rootView.getContext(),"Choose Task First!!!", Toast.LENGTH_LONG);
+    View toastView = ToastMessage.getView();
+    toastView.setBackgroundResource(R.drawable.toast_bground);
+    ToastMessage.show();
+    Fragment fragment = new MyTaskAllFrag();
+    FragmentManager fragmentManager = getFragmentManager();
+    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+}else{
+    showDateTimePicker();
+}
 
-                 showDateTimePicker();
 
 
             }
         });
         btnend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDateTimePicker2();
+                if(tasktype.equals("Pros")){
+                    Toast ToastMessage = Toast.makeText(rootView.getContext(),"Choose Task First!!!", Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_bground);
+                    ToastMessage.show();
+                    Fragment fragment = new MyTaskAllFrag();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+                }else{
+                    showDateTimePicker2();
+                }
 
             }
         });
@@ -134,18 +149,14 @@ public class HomeContractor_Help extends Fragment {
                         Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground);
                         btnend.setBackground(errorbg);
                     }else{
-                    ArrayList<String> taskdec = bundle.getStringArrayList("item_dec");
-                    for (String tsk : taskdec) {
-                        String query1 = "select id from Service\n" +
-                                "where service='" + tsk+"'";
-                        Log.d("ReminderService In", query1);
-                        PreparedStatement ps1 = con.prepareStatement(query1);
-                        ResultSet rs1 = ps1.executeQuery();
-                        rs1.next();
-                        int serviceid=rs1.getInt("id");
-                        String commands = "update [UserPropertyCostTask] set [status]='New', [startdate]='"+startdate+"',[enddate]='"+enddate+"',controctorid='"+Integer.parseInt(selectedproid)+"' where [serviceid]='" + serviceid + "'";
-                        PreparedStatement preStmt = con.prepareStatement(commands);
-                        preStmt.executeUpdate();
+
+                        ArrayList<Integer> serviceid= bundle.getIntegerArrayList("serviceid");
+                        for(int i:serviceid){
+                            String commands = "update [UserPropertyCostTask] set [tasktype]='"+tasktype+"',[taskdesc]='"+desc+"',[status]='New', [startdate]='"+startdate+"',[enddate]='"+enddate+"',controctorid='"+Integer.parseInt(selectedproid)+"' where [serviceid]='" + i + "'";
+                            PreparedStatement preStmt = con.prepareStatement(commands);
+                            preStmt.executeUpdate();
+                        }
+
                         Toast ToastMessage = Toast.makeText(rootView.getContext(),"Task Sent!!!", Toast.LENGTH_LONG);
                         View toastView = ToastMessage.getView();
                         toastView.setBackgroundResource(R.drawable.toast_bground);
@@ -154,7 +165,7 @@ public class HomeContractor_Help extends Fragment {
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
-                    }
+
                     }
                 } catch (Exception ex) {
                     Log.d("ReminderService In", ex.getMessage().toString());
