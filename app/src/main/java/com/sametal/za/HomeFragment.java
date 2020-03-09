@@ -128,23 +128,42 @@ Spinner spinnerprppertyname;
         } catch (Exception ex) {
 
         }
-
+        int total = 0;
         try {
             String query = "select * from [UserPropertyCostTask] where userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            int total = 0;
+
             int tota2 = 0;
             while (rs.next()) {
                 total = total + Integer.parseInt(rs.getString("cost"));
+                Log.d("ReminderService In", "UserPropertyCostTask"+total);
                 tota2=tota2+1;
             }
             txtmaintance.setText(String.valueOf(tota2));
-            txttotalannualcost.setText("Total annual cost R" + String.valueOf(total));
+
 
         } catch (Exception ex) {
             Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
         }
+        //All HomeOwnership Sum
+
+        try {
+            String query = "select * from [UserOnGoingProjectTask] where userid="+activity.id;
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            Log.d("ReminderService In", query);
+            while (rs.next()) {
+                total = total + Integer.parseInt(rs.getString("cost"));
+                Log.d("ReminderService In", "UserOnGoingProjectTask"+total);
+            }
+
+
+        } catch (Exception ex) {
+            Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
+        }
+
+        txttotalannualcost.setText("Total annual cost R" + String.valueOf(total));
 
         try {
             if(isGoogleMapsInstalled())

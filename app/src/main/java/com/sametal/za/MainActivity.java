@@ -445,6 +445,7 @@ public class MainActivity extends AppCompatActivity
                 if (rs.getRow() != 0) {
 
                     edthidenuserid.setText(rs.getString("id"));
+                    email = rs.getString("email").trim();
                     // edthidenuserrole.setText(rs.getString("userRole"));
 
                 }
@@ -542,7 +543,7 @@ public class MainActivity extends AppCompatActivity
                                 userstate = "O";
                                 firstname = rs.getString("firstname").trim();
                                 position = rs.getString("position").trim();
-                                email = rs.getString("email").trim();
+                               email = rs.getString("email").trim();
 
                             } catch (Exception ex) {
                                 Log.d("ReminderService In", ex.getMessage() + "######");

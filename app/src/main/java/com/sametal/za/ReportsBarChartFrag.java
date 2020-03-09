@@ -2,6 +2,7 @@ package com.sametal.za;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class ReportsBarChartFrag extends Fragment {
         db = "Dotsprop";
         un = "sqaloits";
         pass = "422q5mfQzU";
-        double total1=0;double total2=0;double total3=0;
+        double total1=0;double total2=0;double total3=0; double percent=0;
 
         try {
             ConnectionClass cn = new ConnectionClass();
@@ -78,7 +79,40 @@ public class ReportsBarChartFrag extends Fragment {
             // Toast.makeText(rootView.getContext(), ex.getMessage().toString(), Toast.LENGTH_LONG).show();
         }
 //===========
+int total=0;
 
+
+        try {
+            String query2 = "select * from [UserOnGoingProjectTask]  "+
+                    " where userid=" + Integer.parseInt(activity.id);
+            PreparedStatement ps2 = con.prepareStatement(query2);
+            ResultSet rs2 = ps2.executeQuery();
+
+            while (rs2.next()) {
+
+                total=total+1;
+            }
+
+            String query = "select * from [UserOnGoingProjectTask] where taskstarted='Yes' and taskapproved='Yes' and taskonquery='Yes' and userid="+activity.id;
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            double TotalTask=total;
+            int totala = 0;
+            while (rs.next()) {
+
+                totala=totala+1;
+            }
+
+            percent=Math.round((totala/TotalTask)*100);
+
+
+
+        } catch (Exception ex) {
+            Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
+        }
+
+
+        //============
 
 
         BarChart chart = (BarChart) rootView.findViewById(R.id.barchart);
@@ -89,6 +123,8 @@ public class ReportsBarChartFrag extends Fragment {
         entries.add(new BarEntry((float)total2, index));
         index++;
         entries.add(new BarEntry((float)total3, index));
+        index++;
+        entries.add(new BarEntry((float)percent, index));
 
        /* if((float)total1>0.0f){
             entries.add(new BarEntry((float)total1, index));
@@ -111,6 +147,7 @@ public class ReportsBarChartFrag extends Fragment {
         labels.add("Not Started");
         labels.add("Incomplete");
         labels.add("Completed");
+        labels.add("On-Going Project");
        /* if((float)total1>0.0f){
             labels.add("New");
         }

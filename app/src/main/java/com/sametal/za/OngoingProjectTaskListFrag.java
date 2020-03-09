@@ -67,6 +67,7 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
         spinnercategory = (Spinner) rootView.findViewById(R.id.spinnercategory);
         back = (ImageView) rootView.findViewById(R.id.back);
         newtask = (ImageView) rootView.findViewById(R.id.newtask);
+        txtfees = (TextView) rootView.findViewById(R.id.txtfees);
         txtoustanding = (TextView) rootView.findViewById(R.id.txtoustanding);
         txttotaltask = (TextView) rootView.findViewById(R.id.txttotaltask);
 
@@ -108,6 +109,7 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
 
                 Fragment fragment = new OnGoingProjectTaskRegister();
                 FragmentManager fragmentManager = getFragmentManager();
+                bundles.putString("newtask", "newtask");
                 fragmentManager.beginTransaction()
                         .replace(R.id.mainFrame, fragment).commit();
 
@@ -133,10 +135,6 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
                     } catch (Exception ex) {
                         Log.d("ReminderService In", ex.getMessage().toString());
                     }
-                }else{
-                   // spinnercategory.setSelection(1);
-                    int service = spinnercategory.getSelectedItemPosition() ;
-                   // FillData(service);
                 }
             }
 
@@ -206,7 +204,24 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
 
 
         try {
-            String query = "SELECT t.id as task_id,*\n" +
+            String query = "SELECT count (t.id) as c " +
+                    "  FROM [Dotsprop].[sqaloits].[UserOnGoingProjectTask] t\n" +
+                    "  inner join [UserOngoingProjectService] s on s.id=t.projectserviceid" +
+                    " where (taskstarted='No' or taskapproved='No' or taskonquery='No') and projectcategoryid='"+projectcategoryid+"' and userid=" + activity.id+"  and [projectid]='" + activity.projectid+"'";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+
+
+            rs.next();
+            txtoustanding.setText(rs.getString("c")+" Outstanding Task");
+
+
+
+
+
+
+            query = "SELECT t.id as task_id,*\n" +
                     "  FROM [Dotsprop].[sqaloits].[UserOnGoingProjectTask] t\n" +
                     "  inner join [UserOngoingProjectService] s on s.id=t.projectserviceid" +
                     " where projectcategoryid='"+projectcategoryid+"' and userid=" + activity.id+"  and [projectid]='" + activity.projectid+"'";
@@ -219,28 +234,42 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
             item_taskid.clear();
 
 
-            PreparedStatement ps = con.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
+             ps = con.prepareStatement(query);
+             rs = ps.executeQuery();
 
-
+           int total=0;
+            int totaltask=0;
             while (rs.next()) {
-                item_taskid.add(rs.getInt("task_id"));
-                item_taskvalue.add(rs.getString("service"));
-                item_dec.add("R"+rs.getString("cost"));
-                String  query1 = "select Count(projectserviceid) as c from [UserOnGoingProjectTask] where projectserviceid='"+rs.getInt("projectserviceid")+"' and [projectid]='" + activity.projectid+"'";
 
-                PreparedStatement ps1 = con.prepareStatement(query1);
-                ResultSet rs1 = ps1.executeQuery();
-                   rs1.next();
-                item_status.add(rs1.getString("c"));
+                String  query2 = "select sum(cost) c " +
+                        "  FROM [Dotsprop].[sqaloits].[UserOnGoingProjectTask] t \n" +
+                        "  inner join [UserOngoingProjectService] s on s.id=t.projectserviceid" +
+                        " where [service]='" + rs.getString("service")+"' and [projectid]='" + activity.projectid+"'";
+                Log.d("ReminderService In", query2);
+                PreparedStatement ps2 = con.prepareStatement(query2);
+                ResultSet rs2 = ps2.executeQuery();
+                rs2.next();
+                totaltask+=1;
+                if(!item_taskvalue.contains(rs.getString("service"))){
+                    item_taskid.add(rs.getInt("task_id"));
+                    item_taskvalue.add(rs.getString("service"));
+                    item_dec.add("R"+rs2.getString("c"));
 
 
+                    String  query1 = "select Count(projectserviceid) as c from [UserOnGoingProjectTask] " +
+                            " where projectserviceid='"+rs.getInt("projectserviceid")+"' and [projectid]='" + activity.projectid+"'";
+                    PreparedStatement ps1 = con.prepareStatement(query1);
+                    ResultSet rs1 = ps1.executeQuery();
+                    rs1.next();
+                    item_status.add(rs1.getString("c")+" Tasks");
+                }
 
-
-
-
+                total+=Integer.parseInt(rs.getString("cost"));
             }
 
+            txttotaltask.setText(totaltask+" Total Tasks");
+
+txtfees.setText("R"+String.valueOf(total));
 
 
             OngoingProjectTaskFragListAdapter adapter = new OngoingProjectTaskFragListAdapter(this.getActivity(), item_taskvalue, item_dec,item_status);
@@ -258,6 +287,19 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
 
                        selectedtaskvalue = item_taskvalue.get(position);
                         selectedtaskdesc = item_dec.get(position);
+                        String  query1 = "select t.id as task_id " +
+                                "  FROM [Dotsprop].[sqaloits].[UserOnGoingProjectTask] t \n" +
+                                "  inner join [UserOngoingProjectService] s on s.id=t.projectserviceid" +
+                                " where [service]='" + selectedtaskvalue+"' and [projectid]='" + activity.projectid+"'";
+
+
+                        PreparedStatement ps1 = con.prepareStatement(query1);
+                        ResultSet rs1 = ps1.executeQuery();
+                        final ArrayList<Integer> item_taskid = new ArrayList<Integer>();
+                       while(rs1.next()){
+                          item_taskid.add(rs1.getInt("task_id") );
+                       }
+
 
 
                         if (currentSelectedView != null && currentSelectedView != view) {
@@ -270,51 +312,39 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(rootView.getContext());
                             builder.setTitle(selectedtaskvalue);
-                            builder.setIcon(rootView.getResources().getDrawable(R.drawable.radio));
-                            builder.setMessage("Add/Details/Delete?");
-                            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                       HomeOwnershipFrag fragment = new HomeOwnershipFrag();
-                        fragment.setArguments(bundles);
-                        fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+                            builder.setIcon(rootView.getResources().getDrawable(R.drawable.jobs));
+                            builder.setMessage("Details/Delete?");
 
 
-                                }
-                            });
-                        builder.setPositiveButton("Details", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                HomeOwnershipFrag fragment = new HomeOwnershipFrag();
-                                fragment.setArguments(bundles);
-                                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
+                                try {
+                                        for(int taskid:item_taskid){
+                                            String commands = "delete from [UserOnGoingProjectTask]  where [id]='" + taskid + "'";
+                                            PreparedStatement preStmt = con.prepareStatement(commands);
+                                            preStmt.executeUpdate();
+                                        }
+
+                                    Toast ToastMessage = Toast.makeText(rootView.getContext(), "Task Deleted Successfully!!!", Toast.LENGTH_LONG);
+                                    View toastView = ToastMessage.getView();
+                                    toastView.setBackgroundResource(R.drawable.toast_bground);
+                                    ToastMessage.show();
+
+
+                                } catch (Exception ex) {
+                                    Log.d("ReminderService In", ex.getMessage().toString());
+                                }
 
                             }
                         });
-                            builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                            builder.setNegativeButton("Details", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    try {
-
-                                            for (int i : item_taskid) {
-                                                String commands = "delete from [UserPropertyCostTask]  where [id]='" + i + "'";
-                                                PreparedStatement preStmt = con.prepareStatement(commands);
-                                                preStmt.executeUpdate();
-                                                commands = "delete from [UserPropertyCostTaskPhotos]  where [taskid]='" + i + "'";
-                                                preStmt = con.prepareStatement(commands);
-                                                preStmt.executeUpdate();
-                                            }
-
-                                            Toast ToastMessage = Toast.makeText(rootView.getContext(), "Task Deleted Successfully!!!", Toast.LENGTH_LONG);
-                                            View toastView = ToastMessage.getView();
-                                            toastView.setBackgroundResource(R.drawable.toast_bground);
-                                            ToastMessage.show();
-
-
-                                    } catch (Exception ex) {
-                                        Log.d("ReminderService In", ex.getMessage().toString());
-                                    }
+                                    OnGoingProjectTaskRegister fragment = new OnGoingProjectTaskRegister();
+                                    fragment.setArguments(bundles);
+                                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
                                 }
                             });

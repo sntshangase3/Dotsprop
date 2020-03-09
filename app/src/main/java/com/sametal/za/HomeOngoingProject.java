@@ -154,6 +154,24 @@ int imageid=1;
         } catch (Exception ex) {
 
         }
+        try {
+            String query = "select * from [UserOnGoingProjectTask] where taskstarted='Yes' and taskapproved='Yes' and taskonquery='Yes' and userid="+activity.id;
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            double TotalTask=Double.valueOf(txttasktotal.getText().toString());
+            int total = 0;
+            while (rs.next()) {
+
+                total=total+1;
+            }
+            Log.d("ReminderService In", "DDD"+total+" "+TotalTask);
+            double percent=Math.round((total/TotalTask)*100);
+
+            txtpercent.setText(String.valueOf(percent)+"%");
+
+        } catch (Exception ex) {
+            Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
+        }
 
         try {
             String query = "select distinct taskbyid  from [UserOnGoingProjectTask] where userid="+activity.id;
@@ -169,20 +187,7 @@ int imageid=1;
         } catch (Exception ex) {
             Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
         }
-        try {
-            String query = "select * from [UserOnGoingProjectTask] where userid="+activity.id;
-            PreparedStatement ps = con.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            int total = 0;
-            while (rs.next()) {
 
-                total=total+1;
-            }
-            txtpercent.setText(String.valueOf(total));
-
-        } catch (Exception ex) {
-            Log.d("ReminderService In", "DDD"+ex.getMessage().toString());
-        }
         try {
             String query = "select * from [UserOnGoingProjectTask] where userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);

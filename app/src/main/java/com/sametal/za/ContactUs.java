@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import java.sql.Connection;
 public class ContactUs extends Fragment {
     private static final int REQUEST_CODE = 1;
     Button btnOK;
-    EditText txtFrom;
+    EditText txtFrom,txtTo;
     EditText txtSubject;
     EditText txtMessage;
     ImageView fb,twt,web;
@@ -51,7 +52,7 @@ public class ContactUs extends Fragment {
 
 
         btnOK = (Button) rootView.findViewById(R.id.btnOK);
-
+        txtTo = (EditText)rootView. findViewById(R.id.etTo);
         txtFrom = (EditText)rootView. findViewById(R.id.etFrom);
         txtSubject = (EditText)rootView. findViewById(R.id.etSubject);
         txtMessage = (EditText) rootView.findViewById(R.id.etMessage);
@@ -63,8 +64,22 @@ public class ContactUs extends Fragment {
         bundle = this.getArguments();
         try{
             if(bundle != null){
-                txtFrom.setText(bundle.getString("email"));
+                if(!bundle.getString("email").equals("")){
+                    txtFrom.setText(bundle.getString("email"));
+                    Log.d("ReminderService In", bundle.getString("email"));
+                }
+
                           }
+        }catch (Exception ex){
+
+        }
+        try{
+            if(bundle != null){
+                if(!bundle.getString("email1").equals("")){
+                    txtTo.setText(bundle.getString("email1"));
+                    Log.d("ReminderService In", bundle.getString("email1"));
+                }
+            }
         }catch (Exception ex){
 
         }
@@ -151,13 +166,19 @@ private String z="";
             try {
                 Mail m = new Mail("Info@sqaloitsolutions.co.za", "Mgazi@251085");
 
-             String[] to = {"jabun@ngobeniholdings.co.za"};
+             String to = "jabun@ngobeniholdings.co.za";
+             if(!txtTo.getText().toString().equals("")){
+               to=  txtTo.getText().toString();
+             }
+
+
+String [] toemail={to};
 
                 String from =txtFrom.getText().toString();
                 String subject = txtSubject.getText().toString();
                 String message = txtMessage.getText().toString()+"\n\n------\nRegards - Dotsprop App\n\nThis email was intended for & sent to you by Dotsprop";
 
-                m.setTo(to);
+                m.setTo(toemail);
                 m.setFrom(from);
                 m.setSubject(subject);
                 m.setBody(message);
