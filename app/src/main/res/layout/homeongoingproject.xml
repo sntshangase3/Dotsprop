@@ -108,6 +108,13 @@ android:layout_gravity="center"
             android:textAlignment="center"
             android:textColor="@color/colorRed"
             android:textStyle="bold" />
+        <ImageView
+
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/b4"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/budget" />
 
 
     </LinearLayout>

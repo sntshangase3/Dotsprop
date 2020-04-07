@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by sibusison on 2017/07/30.
  */
-public class ReportsBarChartFrag extends Fragment {
+public class ReportsBarChartOnGoingFrag extends Fragment {
 
     View rootView;
 
@@ -40,7 +40,8 @@ public class ReportsBarChartFrag extends Fragment {
         db = "Dotsprop";
         un = "sqaloits";
         pass = "422q5mfQzU";
-        double total1=0;double total2=0;double total3=0; double percent=0;
+        int  totala=0;
+        double completed=0;double incomplete=0;double notstarted=0;
 
         try {
             ConnectionClass cn = new ConnectionClass();
@@ -56,28 +57,35 @@ public class ReportsBarChartFrag extends Fragment {
 
 
 
-                String query11 = "select * from [UserPropertyCostTask] where [userid]=" + activity.edthidenuserid.getText().toString() ;
+                String query11 = "select * from [UserOnGoingProjectTask] where [userid]=" + activity.edthidenuserid.getText().toString() ;
                 PreparedStatement ps11 = con.prepareStatement(query11);
                 ResultSet rs11 = ps11.executeQuery();
                 while (rs11.next()) {
+totala=totala+1;
 
 
-                    if(rs11.getString("status").equals("New")){
-                        total1=total1+1;
-                    }else if(rs11.getString("status").equals("Incomplete")){
-                        total2=total2+1;
-                    }else if(rs11.getString("status").equals("Complete")){
-                        total3=total3+1;
+                    if(rs11.getString("taskapproved").equals("Yes")&&rs11.getString("taskonquery").equals("No")){
+                        completed=completed+1;
+                    }else if(rs11.getString("taskstarted").equals("Yes")&&rs11.getString("taskonquery").equals("Yes")){
+                        incomplete=incomplete+1;
+                    }else if(rs11.getString("taskstarted").equals("No")){
+                        notstarted=notstarted+1;
                     }
 
                 }
 
-
+                completed=Math.round((completed/totala)*100);
+                incomplete=Math.round((incomplete/totala)*100);
+                notstarted=Math.round((notstarted/totala)*100);
 
             }
         } catch (Exception ex) {
             // Toast.makeText(rootView.getContext(), ex.getMessage().toString(), Toast.LENGTH_LONG).show();
         }
+//===========
+
+
+
 
 
         //============
@@ -86,23 +94,23 @@ public class ReportsBarChartFrag extends Fragment {
         BarChart chart = (BarChart) rootView.findViewById(R.id.barchart);
         ArrayList<BarEntry> entries = new ArrayList<>();
         int index=0;
-        entries.add(new BarEntry((float)total1, index));
+        entries.add(new BarEntry((float)completed, index));
         index++;
-        entries.add(new BarEntry((float)total2, index));
+        entries.add(new BarEntry((float)incomplete, index));
         index++;
-        entries.add(new BarEntry((float)total3, index));
+        entries.add(new BarEntry((float)notstarted, index));
 
 
-       /* if((float)total1>0.0f){
-            entries.add(new BarEntry((float)total1, index));
+       /* if((float)completed>0.0f){
+            entries.add(new BarEntry((float)completed, index));
             index++;
         }
-        if((float)total2>0.0f){
-            entries.add(new BarEntry((float)total2, index));
+        if((float)incomplete>0.0f){
+            entries.add(new BarEntry((float)incomplete, index));
             index++;
         }
-        if((float)total3>0.0f){
-            entries.add(new BarEntry((float)total3, index));
+        if((float)notstarted>0.0f){
+            entries.add(new BarEntry((float)notstarted, index));
             index++;
         }*/
 
@@ -111,17 +119,17 @@ public class ReportsBarChartFrag extends Fragment {
         BarDataSet dataset = new BarDataSet(entries, "Task Progress");
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
         ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Not Started");
-        labels.add("Incomplete");
-        labels.add("Completed");
+        labels.add("Tast Started");
+        labels.add("Task Approved");
+        labels.add("Task Onquery");
 
-       /* if((float)total1>0.0f){
+       /* if((float)completed>0.0f){
             labels.add("New");
         }
-        if((float)total2>0.0f){
+        if((float)incomplete>0.0f){
             labels.add("Accepted");
         }
-        if((float)total3>0.0f){
+        if((float)notstarted>0.0f){
             labels.add("Declined");
         }*/
 

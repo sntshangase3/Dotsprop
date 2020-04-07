@@ -68,6 +68,7 @@ android:scaleType="centerCrop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New"
+                android:visibility="gone"
                 android:layout_marginTop="15dp"
                 android:textColor="@color/colorPrimaryDark"
                 android:gravity="center" />
@@ -76,7 +77,7 @@ android:scaleType="centerCrop"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-
+android:visibility="gone"
                 android:src="@drawable/setting1" />
 
         </LinearLayout>

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,9 +37,12 @@ import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static com.sametal.za.BookingRequestFrag.DATE_TIME_FORMAT;
 
@@ -56,12 +61,12 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
     Button btncreate,btnsave;
     MainActivity activity = MainActivity.instance;
-    ImageView back,prev,forward,delete,callno,email,map;
+    ImageView back,prev,forward,delete,callno,email,map,newproject,datep;
 
     FragmentManager fragmentManager;
-
-    Spinner spinnerprojectname,spinnercategory,spinnerservice,spinnertaskby;
-    EditText edttitle, edttask,edtplace, edtdate,  edtcost;
+    String started="No",approved="No",onquery="No";
+    Spinner spinnercategory,spinnerservice,spinnertaskby,spinnerprojectname;
+    EditText projectname,edttitle, edttask,edtplace, edtdate,  edtcost;
     TextView txttasklist;
     int propertyexist=0;
     int proid=0;
@@ -81,6 +86,8 @@ public class OnGoingProjectTaskRegister extends Fragment {
         prev = (ImageView) rootView.findViewById(R.id.prev);
         forward = (ImageView) rootView.findViewById(R.id.forward);
 
+        datep = (ImageView) rootView.findViewById(R.id.date);
+        newproject = (ImageView) rootView.findViewById(R.id.newproject);
         callno = (ImageView) rootView.findViewById(R.id.callno);
         email = (ImageView) rootView.findViewById(R.id.email);
         map = (ImageView) rootView.findViewById(R.id.map);
@@ -92,6 +99,7 @@ public class OnGoingProjectTaskRegister extends Fragment {
         edtplace = (EditText) rootView.findViewById(R.id.edtplace);
         edtdate = (EditText) rootView.findViewById(R.id.edtdate);
         edtcost = (EditText) rootView.findViewById(R.id.edtcost);
+        projectname = (EditText) rootView.findViewById(R.id.projectname);
 
         b1 = (CheckBox) rootView.findViewById(R.id.b1);
         b2 = (CheckBox) rootView.findViewById(R.id.b2);
@@ -99,11 +107,11 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
        btncreate = (Button) rootView.findViewById(R.id.btn_create);
         btnsave = (Button) rootView.findViewById(R.id.btn_save);
-        spinnerprojectname = (Spinner) rootView.findViewById(R.id.spinnerprojectname);
+
         spinnercategory = (Spinner) rootView.findViewById(R.id.spinnercategory);
         spinnerservice = (Spinner) rootView.findViewById(R.id.spinnerservice);
         spinnertaskby = (Spinner) rootView.findViewById(R.id.spinnertaskby);
-
+        spinnerprojectname = (Spinner) rootView.findViewById(R.id.spinnerproject);
        // spinnerservice.setEnabled(false);
         //spinnerservice.setClickable(false);
 
@@ -119,13 +127,46 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
         FillCategoryData();
         FillProData();
-        FillProjectData();
+       FillProjectData();
+        FillServiceData();
       // FillServiceAll();
         bundle = this.getArguments();
 
 
 
+        spinnerprojectname.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                Object item = adapterView.getItemAtPosition(position);
+
+                try{
+
+                    //FillData(spinnerservice.getSelectedItem().toString());
+                    projectname.setText(spinnerprojectname.getSelectedItem().toString());
+
+                          String  query = "SELECT id from [UserOnGoingProject]  where [projectname]='" + spinnerprojectname.getSelectedItem().toString()+"'";
+
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+                      rs.next();
+
+                       activity.projectid=rs.getInt("id");
+                   // FillDataByService(item_taskid.get(taskid));
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // TODO Auto-generated method stub
+
+            }
+        });
 
         spinnerservice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -159,6 +200,7 @@ public class OnGoingProjectTaskRegister extends Fragment {
                 try{
 //proid=spinnertaskby.getSelectedItemPosition();
                     //FillData(spinnerservice.getSelectedItem().toString());
+
                 } catch (Exception ex) {
                     Log.d("ReminderService In", ex.getMessage().toString());
                 }
@@ -180,12 +222,12 @@ public class OnGoingProjectTaskRegister extends Fragment {
                 // item.toString()
                if(!spinnercategory.getSelectedItem().toString().equals("Select Category...")){
                     try{
-                       FillServiceData(spinnercategory.getSelectedItemPosition());
-                       spinnerservice.setSelection(item_serviceid.get(taskid)-1);
+
 
                         if (edttitle.getText().toString().trim().equals("")|| edttask.getText().toString().trim().equals("")||  edtplace.getText().toString().trim().equals("")|| edttitle.getText().toString().trim().equals("")){
                             Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground1);
                             spinnerservice.setBackground(errorbg);
+                           // FillServiceData(spinnercategory.getSelectedItemPosition());
                             spinnerservice.performClick();
 
                         }
@@ -236,19 +278,48 @@ public class OnGoingProjectTaskRegister extends Fragment {
         } catch (Exception ex) {
 
         }
-
-
-        edtdate.setOnTouchListener(new View.OnTouchListener() {
-
+      /*  edtdate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.i("click", "onMtouch");
-                edtdate.setFocusable(true);
-                edtdate.requestFocus();
-               showDateTimePicker();
-                return false;
+            public void onClick(View v) {
+
+                try {
+
+                    int mYear, mMonth, mDay, mHour, mMinute, mSeconds, mMSeconds;
+                    DatePickerDialog datePickerDialog;
+                    Calendar c;
+                    c = Calendar.getInstance();
+                    mYear = c.get(Calendar.YEAR);
+                    mMonth = c.get(Calendar.MONTH);
+                    mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+
+                    datePickerDialog = new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+
+
+                            //textValue.setText();
+
+
+                            edtdate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+
+
+
+
+
+                        }
+                    }, mYear, mMonth, mDay);
+                    datePickerDialog.show();
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
             }
-        });
+        });*/
+
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,10 +327,46 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
                 try {
 
-                    DeleteProfile updatePro = new DeleteProfile();
+                   DeleteProfile updatePro = new DeleteProfile();
                     updatePro.execute("");
                     HomeOngoingProject fragment = new HomeOngoingProject();
                     fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
+
+
+            }
+        });
+
+        datep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                try {
+
+                    int mYear, mMonth, mDay, mHour, mMinute, mSeconds, mMSeconds;
+                    DatePickerDialog datePickerDialog;
+                    Calendar c;
+                    c = Calendar.getInstance();
+                    mYear = c.get(Calendar.YEAR);
+                    mMonth = c.get(Calendar.MONTH);
+                    mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+
+                    datePickerDialog = new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            edtdate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+
+                        }
+                    }, mYear, mMonth, mDay);
+                    datePickerDialog.show();
 
                 } catch (Exception ex) {
                     Log.d("ReminderService In", ex.getMessage().toString());
@@ -326,6 +433,84 @@ public class OnGoingProjectTaskRegister extends Fragment {
                     updatePro.execute("");
                     HomeOngoingProject fragment = new HomeOngoingProject();
                   fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
+            }
+        });
+
+        b1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                   started="Yes";
+                }else{
+                    started="No";
+                }
+            }
+        } );
+        b2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    approved="Yes";
+                }else{
+                    approved="No";
+                }
+            }
+        } );
+        b3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    onquery="Yes";
+                }else{
+                    onquery="No";
+                }
+            }
+        } );
+
+        newproject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(rootView.getContext());
+                    builder.setTitle("Add New");
+                    builder.setIcon(rootView.getResources().getDrawable(R.drawable.radio));
+                    builder.setMessage("Project / Task...?");
+                    builder.setPositiveButton("Task", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+          //  spinnerprojectname.performClick();
+                            activity.projectid=spinnerprojectname.getSelectedItemPosition();
+                          //  projectname.setText("");
+                            edttitle.setText("");
+                            edttask.setText("");
+                            edtplace.setText("");
+                            edtdate.setText("");
+
+                            edtcost.setText("");
+
+                           // spinnertaskby.setSelection(0);
+                            proid=spinnertaskby.getSelectedItemPosition();
+                            spinnercategory.setSelection(0);
+
+                            //spinnerservice.setSelection(0);
+
+
+                        }
+                    });
+                    builder.setNegativeButton("Project", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            OnGoingProjectRegister fragment = new OnGoingProjectRegister();
+                            fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+                        }
+                    });
+                    builder.show();
 
                 } catch (Exception ex) {
                     Log.d("ReminderService In", ex.getMessage().toString());
@@ -405,7 +590,17 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+
+                Fragment fragment = new OngoingProjectTaskListFrag();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+            }
+        });
 
         return rootView;
     }
@@ -436,35 +631,8 @@ public class OnGoingProjectTaskRegister extends Fragment {
             }
         };
     }
-    public void showDateTimePicker() {
 
-        final Calendar currentDate = Calendar.getInstance();
-        date = Calendar.getInstance();
-        new DatePickerDialog(rootView.getContext(),R.style.DialogDate2, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                date.set(year, monthOfYear, dayOfMonth);
-                new TimePickerDialog(rootView.getContext(),R.style.DialogDate2, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        date.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        date.set(Calendar.MINUTE, minute);
-                        SimpleDateFormat date_format = new SimpleDateFormat(DATE_TIME_FORMAT);
-
-                        try {
-                            startdate = date_format.format(date.getTime());
-                            edtdate.setText(startdate);
-                            Log.d("ReminderService In", "#######1" + startdate);
-
-                        } catch (Exception e) {
-                            Log.d("ReminderService In", e.getMessage().toString());
-                        }
-                    }
-                }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false).show();
-            }
-        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
-    }
-    public void FillProjectData() {
+   public void FillProjectData() {
         //==============Fill Data=
         try {
 
@@ -474,16 +642,18 @@ public class OnGoingProjectTaskRegister extends Fragment {
             ArrayList<String> category = new ArrayList<String>();
             category.add("Select Project");
             while (rs.next()) {
+                Log.d("ReminderService In", "14");
                 category.add(rs.getString("projectname"));
                 propertyexist=propertyexist+1;
             }
             adapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.spinner_item, category);
             adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             spinnerprojectname.setAdapter(adapter);
-            if(propertyexist!=0){
+            if(propertyexist!=0) {
+                Log.d("ReminderService In", "15");
                 spinnerprojectname.setSelection(1);
 
-              //  FillData(spinnerprojectname.getSelectedItem().toString());
+                // FillData(spinnerprojectname.getSelectedItem().toString());
             }
 
         } catch (Exception ex) {
@@ -512,15 +682,15 @@ public class OnGoingProjectTaskRegister extends Fragment {
         }
 //==========
     }
-    public void FillServiceData(int categoryid) {
+    public void FillServiceData() {
         //==============Fill Data=
         try {
 
-            String query = "select [service] from [UserOngoingProjectService] where UserOngoingProjectCategoryid="+categoryid;
+            String query = "select [service] from [UserOngoingProjectService]";// where UserOngoingProjectCategoryid="+categoryid;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             ArrayList<String> category = new ArrayList<String>();
-
+category.add("Select Service...");
             while (rs.next()) {
                 category.add(rs.getString("service"));
             }
@@ -531,27 +701,7 @@ public class OnGoingProjectTaskRegister extends Fragment {
         } catch (Exception ex) {
             Log.d("ReminderService In", ex.getMessage());
         }}
-        public void FillServiceAll(){
-            //==============Fill Data=
-            try {
 
-                String query = "select [service] from [UserOngoingProjectService]";
-                PreparedStatement ps = con.prepareStatement(query);
-                ResultSet rs = ps.executeQuery();
-                ArrayList<String> category = new ArrayList<String>();
-
-                while (rs.next()) {
-                    category.add(rs.getString("service"));
-                }
-                adapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.spinner_item, category);
-                adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-                spinnerservice.setAdapter(adapter);
-
-            } catch (Exception ex) {
-                Log.d("ReminderService In", ex.getMessage());
-            }
-//==========
-    }
     public void FillProData() {
         //==============Fill Data=
         try {
@@ -560,8 +710,8 @@ public class OnGoingProjectTaskRegister extends Fragment {
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             ArrayList<String> category = new ArrayList<String>();
-
-            while (rs.next()) {
+category.add("Select Pro");
+        while (rs.next()) {
                 category.add(rs.getString("businessname"));
             }
             adapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.spinner_item, category);
@@ -574,53 +724,6 @@ public class OnGoingProjectTaskRegister extends Fragment {
 //==========
     }
 
-   /* public void FillData(String name) {
-        //==============Fill Data=
-        try {
-
-                    String  query = "select uogp.id as uogp_id, * from [UserOnGoingProjectTask] uogpt" +
-                            " inner join [UserOnGoingProject] uogp on uogp.id=uogpt.projectid where [projectname]='" + name+"'";
-
-                   PreparedStatement ps = con.prepareStatement(query);
-                    ResultSet rs = ps.executeQuery();
-                    rs.next();
-            Log.d("ReminderService In", query);
-                    if (rs.getRow() != 0) {
-                        activity.projectid=rs.getInt("uogp_id");
-                        edttitle.setText(rs.getString("title"));
-                        edttask.setText(rs.getString("task").trim());
-                           edtplace.setText(rs.getString("place"));
-                        edtdate.setText(rs.getString("startdate"));
-
-                        edtcost.setText(rs.getString("cost"));
-
-                        spinnertaskby.setSelection(Integer.parseInt(rs.getString("taskbyid")));
-                        spinnercategory.setSelection(Integer.parseInt(rs.getString("projectcategoryid")));
-                        spinnerservice.setSelection(Integer.parseInt(rs.getString("projectserviceid"))+1);
-                        if (rs.getString("taskstarted").equals("Yes")){
-                            b1.setChecked(true);
-                        }else{
-                            b1.setChecked(false);
-                        }
-                        if (rs.getString("taskapproved").equals("Yes")){
-                            b2.setChecked(true);
-                        }else{
-                            b2.setChecked(false);
-                        }
-                        if (rs.getString("taskonquery").equals("Yes")){
-                            b3.setChecked(true);
-                        }else{
-                            b3.setChecked(false);
-                        }
-
-
-                    }
-
-        } catch (Exception ex) {
-            Log.d("ReminderService In", "An error occurred: " + ex.getMessage());
-        }
-//==========
-    }*/
 
     public void FillDataByService(int taskid) {
         //==============Fill Data=
@@ -630,14 +733,17 @@ public class OnGoingProjectTaskRegister extends Fragment {
                     "  FROM UserOnGoingProjectTask t\n" +
                     "  inner join UserOngoingProjectService s on s.id=t.projectserviceid\n" +
                     "   inner join [UserOnGoingProject] uogp on uogp.id=t.projectid\n" +
+
            "   where t.id='"+taskid+"' and service='"+selectedtaskvalue+"'";
 
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            Log.d("ReminderService In", query);
+
             if (rs.getRow() != 0) {
+;
                 activity.projectid=rs.getInt("uogp_id");
+                projectname.setText(rs.getString("projectname"));
                 edttitle.setText(rs.getString("title"));
                 edttask.setText(rs.getString("task").trim());
                 edtplace.setText(rs.getString("place"));
@@ -645,12 +751,13 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
                 edtcost.setText(rs.getString("cost"));
 
-              spinnertaskby.setSelection(Integer.parseInt(rs.getString("taskbyid"))-1);
+              spinnertaskby.setSelection(Integer.parseInt(rs.getString("taskbyid")));
                 proid=Integer.parseInt(rs.getString("taskbyid"));
          spinnercategory.setSelection(Integer.parseInt(rs.getString("projectcategoryid")));
+             //  FillServiceData(Integer.parseInt(rs.getString("projectcategoryid")));
 
-         spinnerservice.setSelection(Integer.parseInt(rs.getString("projectserviceid"))-1);
-//spinnerservice.setSelection(2);
+                spinnerservice.setSelection(Integer.parseInt(rs.getString("projectserviceid")));
+
                 if (rs.getString("taskstarted").equals("Yes")){
                     b1.setChecked(true);
                 }else{
@@ -699,13 +806,14 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
         String title = edttitle.getText().toString();
         String task = edttask.getText().toString();
-        String projectname = spinnerprojectname.getSelectedItem().toString();
-        int service = spinnerservice.getSelectedItemPosition()+1;
+        String projectnam =projectname.getText().toString();
+        int service = spinnerservice.getSelectedItemPosition();
         int category = spinnercategory.getSelectedItemPosition() ;
         String place = edtplace.getText().toString();
         String date = edtdate.getText().toString();
         int taskby =  spinnertaskby.getSelectedItemPosition();
         String cost = edtcost.getText().toString();
+
 
 
 
@@ -728,6 +836,12 @@ public class OnGoingProjectTaskRegister extends Fragment {
                 toast.show();
 
 
+            }else{
+                if(spinnerservice.getSelectedItem().toString().equals("Select Service...")){
+                    Drawable errorbg = getResources().getDrawable(R.drawable.edittexterror_bground1);
+                    spinnerservice.setBackground(errorbg);
+                }
+                Log.d("ReminderService In", z);
             }
 
         }
@@ -736,7 +850,7 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            if (title.trim().equals("")|| task.trim().equals("")|| taskby==0  || projectname.trim().equals("") || place.trim().equals("")|| cost.trim().equals(""))
+            if (title.trim().equals("")|| task.trim().equals("") || projectnam.equals("") ||spinnerservice.getSelectedItem().toString().equals("Select Service...")|| place.trim().equals("")|| cost.trim().equals(""))
                 z = "Please fill in all required details...";
             else {
                 try {
@@ -762,7 +876,7 @@ public class OnGoingProjectTaskRegister extends Fragment {
                                         "           ,[taskapproved]\n" +
                                         "           ,[taskonquery])" +
                                         "values ('" + title + "','" + task + "','" + place + "','" + date + "','" + cost + "','" + taskby + "','" + activity.id + "'," +
-                                        "'" + activity.projectid + "','" +category + "','" + service + "','No','No','No')";
+                                        "'" + activity.projectid + "','" +category + "','" + service + "','"+started+"','"+approved+"','"+onquery+"')";
                                 PreparedStatement preparedStatement = con.prepareStatement(query);
                                 preparedStatement.executeUpdate();
                                 z = "New Project Task Created!!!";
@@ -776,6 +890,7 @@ public class OnGoingProjectTaskRegister extends Fragment {
             } catch (Exception ex) {
                     isSuccess = false;
                     z = "Check your network connection!!";
+                    Log.d("ReminderService In", ex.getMessage().toString());
                     // z=ex.getMessage();
                 }
             }
@@ -793,8 +908,8 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
         String title = edttitle.getText().toString();
         String task = edttask.getText().toString();
-        String projectname = spinnerprojectname.getSelectedItem().toString();
-        int service = spinnerservice.getSelectedItemPosition()+1;
+
+        int service = spinnerservice.getSelectedItemPosition();
         int category = spinnercategory.getSelectedItemPosition() ;
         String place = edtplace.getText().toString();
         String date = edtdate.getText().toString();
@@ -829,31 +944,16 @@ public class OnGoingProjectTaskRegister extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            if (title.trim().equals("")|| task.trim().equals("")|| taskby==0  || projectname.trim().equals("") || place.trim().equals("")|| cost.trim().equals(""))
+            if (title.trim().equals("")|| task.trim().equals("")|| taskby==0  || projectname.equals("") || place.trim().equals("")|| cost.trim().equals(""))
                 z = "Please fill in all required details...";
             else {
                 try {
                     Log.d("ReminderService In", "IN UPDAT ##############");
-                    String taskstarted,taskapproved,taskonquery;
 
-if(b1.isChecked()){
-    taskstarted="Yes";
-}else{
-    taskstarted="No";
-}
-                    if(b2.isChecked()){
-                        taskapproved="Yes";
-                    }else{
-                        taskapproved="No";
-                    }
-                    if(b3.isChecked()){
-                        taskonquery="Yes";
-                    }else{
-                        taskonquery="No";
-                    }
+
 
                     String query = "update [UserOnGoingProjectTask] set  [title]='" + title + "',task='" + task + "',place='" + place + "',startdate='" + date + "',cost='" + cost + "',taskbyid='" + taskby + "',userid='" + activity.id + "'," +
-                            " projectid='" + activity.projectid + "',projectcategoryid='" +category + "',projectserviceid='" + service + "',taskstarted='"+taskstarted+"',taskapproved='"+taskapproved+"',taskonquery='"+taskonquery+"'" +
+                            " projectid='" + activity.projectid + "',projectcategoryid='" +category + "',projectserviceid='" + service + "',taskstarted='"+started+"',taskapproved='"+approved+"',taskonquery='"+onquery+"'" +
                             " where id='"+(item_taskid.get(taskid))+"'";
                         PreparedStatement preparedStatement = con.prepareStatement(query);
                         preparedStatement.executeUpdate();

@@ -251,17 +251,45 @@ public class OngoingProjectTaskListFrag extends Fragment implements AdapterView.
                 rs2.next();
                 totaltask+=1;
                 if(!item_taskvalue.contains(rs.getString("service"))){
+
+
+                        query = "SELECT service from [UserOngoingProjectService] s " +
+                                " where s.id='"+(Integer.parseInt(rs.getString("projectserviceid")))+"'";
+                        PreparedStatement ps1 = con.prepareStatement(query);
+                        ResultSet rs1 = ps1.executeQuery();
+                        rs1.next();
+                        item_taskvalue.add(rs1.getString("service"));
+
+                  /*  if(Integer.parseInt(rs.getString("projectcategoryid"))==2){
+
+                        query = "SELECT service from [UserOngoingProjectService] s " +
+                                " where s.id='"+(Integer.parseInt(rs.getString("projectserviceid")))+"'";
+                        PreparedStatement ps1 = con.prepareStatement(query);
+                        ResultSet rs1 = ps1.executeQuery();
+                        rs1.next();
+                        item_taskvalue.add(rs1.getString("service"));
+                    }
+                    if(Integer.parseInt(rs.getString("projectcategoryid"))==3){
+
+                        query = "SELECT service from [UserOngoingProjectService] s " +
+                                " where s.id='"+(Integer.parseInt(rs.getString("projectserviceid")))+"'";
+                        PreparedStatement ps1 = con.prepareStatement(query);
+                        ResultSet rs1 = ps1.executeQuery();
+                        rs1.next();
+                        item_taskvalue.add(rs1.getString("service"));
+                    }*/
+
                     item_taskid.add(rs.getInt("task_id"));
-                    item_taskvalue.add(rs.getString("service"));
+                   // item_taskvalue.add(rs.getString("service"));
                     item_dec.add("R"+rs2.getString("c"));
 
 
                     String  query1 = "select Count(projectserviceid) as c from [UserOnGoingProjectTask] " +
                             " where projectserviceid='"+rs.getInt("projectserviceid")+"' and [projectid]='" + activity.projectid+"'";
-                    PreparedStatement ps1 = con.prepareStatement(query1);
-                    ResultSet rs1 = ps1.executeQuery();
-                    rs1.next();
-                    item_status.add(rs1.getString("c")+" Tasks");
+                    PreparedStatement ps3 = con.prepareStatement(query1);
+                    ResultSet rs3 = ps3.executeQuery();
+                    rs3.next();
+                    item_status.add(rs3.getString("c")+" Tasks");
                 }
 
                 total+=Integer.parseInt(rs.getString("cost"));

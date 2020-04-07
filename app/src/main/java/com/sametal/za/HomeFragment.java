@@ -112,7 +112,7 @@ Spinner spinnerprppertyname;
 
 
         try {
-            String query2 = "select * from [UserPropertyCostTask] upct "+
+            String query2 = "select  upct.id from [UserPropertyCostTask] upct "+
                     " where status='Accepted' and upct.userid=" + Integer.parseInt(activity.id);
             PreparedStatement ps2 = con.prepareStatement(query2);
             ResultSet rs2 = ps2.executeQuery();
@@ -202,7 +202,7 @@ Spinner spinnerprppertyname;
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view,
                                        int position, long id) {
-                Object item = adapterView.getItemAtPosition(position);
+
                 // item.toString()
                 if(!spinnerprppertyname.getSelectedItem().toString().equals("Select Property")){
                     try{
@@ -440,7 +440,7 @@ address=rs.getString("address").trim();
                 sb.append("select id,Datediff(D,convert(varchar,getDate(),112),Cast([enddate] as date)) as daysleft from [UserPropertyCostTask] where status='Declined'");
                 ResultSet rsa = this.con.prepareStatement(sb.toString()).executeQuery();
                 while (rsa.next()) {
-                    Log.d("Remindersaervice In", "######"+rsa.getString("daysleft"));
+                   // Log.d("Remindersaervice In", "######"+rsa.getString("daysleft"));
                     if (Integer.parseInt(rsa.getString("daysleft").toString()) <= -2) {
                         StringBuilder sb2 = new StringBuilder();
                         sb2.append("delete from [UserPropertyCostTask]  where [id]='");

@@ -105,7 +105,56 @@ android:layout_weight="1"
                     android:layout_weight="1"
                     android:src="@drawable/forward" />
             </LinearLayout>
+            <Spinner
+                android:id="@+id/spinnerproject"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginTop="1dp"
+                android:textColor="#5d5d5d"
+android:layout_gravity="center_horizontal"
+                android:layout_weight="5"
+                android:background="@drawable/edittext_bground"
+                android:padding="5dp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:weightSum="4"
+                android:orientation="horizontal">
 
+
+                <ImageView
+
+                    android:id="@+id/newproject"
+                    android:layout_width="30dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/setting1" />
+                <ImageView
+                    android:id="@+id/callno"
+                    android:layout_width="30dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/call" />
+                <ImageView
+                    android:id="@+id/email"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:src="@drawable/sms" />
+                <ImageView
+                    android:id="@+id/map"
+                    android:layout_width="30dp"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+
+                    android:src="@drawable/map2" />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,35 +168,17 @@ android:layout_weight="1"
                     android:padding="5dp"
                     android:text="Project Name *" />
 
-                <Spinner
-                    android:id="@+id/spinnerprojectname"
+                <EditText
+                    android:id="@+id/projectname"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
-                    android:textColor="#5d5d5d"
-                    android:layout_weight="1"
                     android:background="@drawable/edittext_bground"
-                    android:padding="5dp"
-                    />
-                <ImageView
-                    android:id="@+id/callno"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/call" />
-                <ImageView
-                    android:id="@+id/email"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/sms" />
-                <ImageView
-                    android:id="@+id/map"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
 
-                    android:src="@drawable/map2" />
+                    android:padding="5dp"
+                    android:textColor="#5d5d5d" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -237,15 +268,21 @@ android:hint="e.g Bulding Plan Draft"
 
                 <EditText
                     android:id="@+id/edtdate"
-                    android:layout_width="match_parent"
-android:focusable="true"
+                    android:layout_width="240dp"
+
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:hint="2020-10-25"
                     android:background="@drawable/edittext_bground"
-                    android:inputType="textEmailAddress"
+android:editable="false"
                     android:padding="5dp"
                     android:textColor="#5d5d5d" />
+                <ImageView
+                    android:id="@+id/date"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/calender" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

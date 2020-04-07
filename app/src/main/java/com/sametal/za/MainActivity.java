@@ -542,7 +542,7 @@ public class MainActivity extends AppCompatActivity
                                 id = rs.getString("id").trim();
                                 userstate = "O";
                                 firstname = rs.getString("firstname").trim();
-                                position = rs.getString("position").trim();
+                               // position = rs.getString("position").trim();
                                email = rs.getString("email").trim();
 
                             } catch (Exception ex) {

@@ -55,7 +55,7 @@ public class OnGoingProjectRegister extends Fragment {
     //---------con--------
     Connection con;
     String un, pass, db, ip;
-    Button btncreate,btndelete;
+    Button btncreate,btnupdate,btndelete;
     MainActivity activity = MainActivity.instance;
     byte[] byteArray;
     String encodedImage;
@@ -77,7 +77,7 @@ public class OnGoingProjectRegister extends Fragment {
 
         propertyprofileImage = (ImageView) rootView.findViewById(R.id.propertyprofileImage);
        btncreate = (Button) rootView.findViewById(R.id.btn_create);
-
+        btnupdate = (Button) rootView.findViewById(R.id.btn_update);
         btndelete = (Button) rootView.findViewById(R.id.btn_delete);
         spinnerprojectname = (Spinner) rootView.findViewById(R.id.spinnerprojectname);
 
@@ -128,6 +128,21 @@ public class OnGoingProjectRegister extends Fragment {
                 try {
                         CreateProfile addPro = new CreateProfile();
                         addPro.execute("");
+                    HomeFragment fragment = new HomeFragment();
+                    fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
+
+                } catch (Exception ex) {
+                    Log.d("ReminderService In", ex.getMessage().toString());
+                }
+            }
+        });
+        btnupdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    UpdateProfile addPro = new UpdateProfile();
+                    addPro.execute("");
                     HomeFragment fragment = new HomeFragment();
                     fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
 
@@ -247,7 +262,6 @@ public class OnGoingProjectRegister extends Fragment {
     }
 
 
-
     public class CreateProfile extends AsyncTask<String, String, String> {
 
 
@@ -289,8 +303,88 @@ public class OnGoingProjectRegister extends Fragment {
 
 
 
-                                String query = "insert into [UserOnGoingProject]([projectname],[userid]) " +
-                                        "values ('" + name + "','"+Integer.parseInt(activity.id)+"')";
+                    String query = "insert into [UserOnGoingProject]([projectname],[userid]) " +
+                            "values ('" + name + "','"+Integer.parseInt(activity.id)+"')";
+                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                    preparedStatement.executeUpdate();
+
+                    String query1 = "select MAX(id) as new_id from [UserOnGoingProject]";
+                    PreparedStatement ps = con.prepareStatement(query1);
+                    ResultSet rs = ps.executeQuery();
+                    rs.next();
+
+                    if(rs.getRow()!=0){
+                        activity.projectid=rs.getInt("new_id");
+                    }
+                    for (String photo:projectphotos ) {
+                        query = "insert into [UserOnGoingProjectPhotos]([image],[projectid]) " +
+                                "values ('" + photo + "','" +  activity.projectid + "')";
+                        preparedStatement = con.prepareStatement(query);
+                        preparedStatement.executeUpdate();
+                    }
+
+
+                    z = "New Project Created!!!";
+                    isSuccess = true;
+
+
+
+
+
+
+                } catch (Exception ex) {
+                    isSuccess = false;
+                    z = "Check your network connection!!";
+                    // z=ex.getMessage();
+                }
+            }
+            return z;
+        }
+    }
+
+    public class UpdateProfile extends AsyncTask<String, String, String> {
+
+
+        String z = "";
+        Boolean isSuccess = false;
+
+
+        String name = edtprojectname.getText().toString();
+
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+
+
+            if (isSuccess == true) {
+
+
+                Toast toast = Toast.makeText(rootView.getContext(), z, Toast.LENGTH_LONG);
+                toast.show();
+
+
+            }
+
+        }
+
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (name.trim().equals(""))
+                z = "Please fill in all required details...";
+            else {
+                try {
+
+
+
+                                String query = "update [UserOnGoingProject] set [projectname]='" + name +"' where projectname='" + spinnerprojectname.getSelectedItem().toString()+"'";
+                    Log.d("ReminderService In", query);
                                 PreparedStatement preparedStatement = con.prepareStatement(query);
                                 preparedStatement.executeUpdate();
 
@@ -378,11 +472,6 @@ public class OnGoingProjectRegister extends Fragment {
 
                         z = "Project Deleted!!!";
                         isSuccess = true;
-
-
-
-
-
 
                 } catch (Exception ex) {
                     isSuccess = false;

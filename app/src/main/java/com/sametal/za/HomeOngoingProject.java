@@ -46,7 +46,7 @@ public class HomeOngoingProject extends Fragment {
     String un, pass, db, ip;
     Bundle bundles = new Bundle();
     TextView txttasktotal,txttotalannualcost, txtpercent, txtprop;
-    ImageView b1, b2,b3, projectImages, home;
+    ImageView b1, b2,b3,b4, projectImages, home;
     LinearLayout layoutmyprojecttask;
     Bundle bundle;
 int imageid=1;
@@ -68,6 +68,7 @@ int imageid=1;
         b1 = (ImageView) rootView.findViewById(R.id.b1);
         b2 = (ImageView) rootView.findViewById(R.id.b2);
         b3 = (ImageView) rootView.findViewById(R.id.b3);
+        b4 = (ImageView) rootView.findViewById(R.id.b4);
         home = (ImageView) rootView.findViewById(R.id.home);
 
         layoutmyprojecttask =(LinearLayout) rootView.findViewById(R.id.layoutmyprojecttask);
@@ -155,7 +156,7 @@ int imageid=1;
 
         }
         try {
-            String query = "select * from [UserOnGoingProjectTask] where taskstarted='Yes' and taskapproved='Yes' and taskonquery='Yes' and userid="+activity.id;
+            String query = "select * from [UserOnGoingProjectTask] where taskapproved='Yes' and userid="+activity.id;
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             double TotalTask=Double.valueOf(txttasktotal.getText().toString());
@@ -250,7 +251,11 @@ int imageid=1;
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
                     }else{
-                        Toast.makeText(rootView.getContext(), "Add at least one Project Task!!!",Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(rootView.getContext(), "Add at least one Project Task!!!", Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_bground);
+                        ToastMessage.show();
                         Fragment fragment = new OnGoingProjectTaskRegister();
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
@@ -287,7 +292,10 @@ int imageid=1;
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
                     }else{
-                        Toast.makeText(rootView.getContext(), "Add at least one Project Task!!!",Toast.LENGTH_LONG).show();
+                        Toast ToastMessage = Toast.makeText(rootView.getContext(), "Add at least one Project Task!!!", Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_bground);
+                        ToastMessage.show();
                         Fragment fragment = new OnGoingProjectTaskRegister();
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
@@ -321,10 +329,19 @@ int imageid=1;
             @Override
             public void onClick(View view) {
 
-                Fragment frag = new ReportsBarChartFrag();
+                Fragment frag = new ReportsBarChartOnGoingFrag();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.mainFrame, frag).commit();
+
+
+            }
+        });
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
 
 
             }
